@@ -1036,7 +1036,18 @@
             z-index: 9999;
             animation: fadeIn 0.3s ease;
         }
-
+        /* Recommended CSS for the fixed plot size */
+        .generated-plot-fixed {
+            width: 100%;             /* Take full width of the output container */
+            max-width: 600px;        /* Limit the maximum width if the container is very large */
+            max-height: 400px;       /* Limit the maximum height */
+            height: auto;
+            object-fit: contain;     /* Ensures the plot scales down to fit without cropping */
+            display: block;          /* Ensures proper spacing/margins */
+            margin: 1rem 0;          /* Add vertical spacing */
+            border: 1px solid #ddd;
+            padding: 5px;
+        }
         .fullscreen-overlay img {
             max-width: 90vw;
             max-height: 90vh;
