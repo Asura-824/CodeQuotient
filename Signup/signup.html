@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | SHUBHAM's CodeQuotient</title>
+    <link rel="icon" style="border-radius:50%;" href="/Images/myimage.jpg" type="image/jpg">
+    <link rel="stylesheet" href="/Assests/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .container1{
+            display: flex;
+            flex-direction: row;
+            width:70%;
+            height: 500px;
+            margin: auto;
+            align-items: center;
+            background-color:#F5F5F5;
+            border: 2px solid deeppink;
+            border-right: none;
+            border-radius: 20px;
+        }
+        form{
+            display: flex;
+            gap: 1rem;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 800px;
+            height: 350px;
+        }
+        .container1 img{
+            width: 50%;
+            height: 501px;
+            border-bottom-right-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+        .Login{
+            background-color: rgb(255, 245, 245);
+            display: flex;
+            align-items: center;
+            height: 600px;
+            color: black;
+            padding: auto;
+        }
+        input{
+            width: 50%;
+            height: 50px;
+            margin: auto;
+            border-radius: 20px;
+            border: none;
+            text-align: center;
+        }
+        input::placeholder{
+            text-align: center;
+        }
+        .button{
+            width: 50%;
+            height: 50px;
+            margin: auto;
+            border-radius: 20px;
+            border: none;
+            background-color: #ff0066;
+            cursor: pointer;
+        }
+        
+        /* 🚀 NEW CSS: Fixed message position at top right 🚀 */
+        #message-display {
+            position: fixed; 
+            top: 70px;       /* 10px from the top */
+            right: 10px;     /* 10px from the right */
+            bottom: auto;    
+            width: 70%;
+            max-width: 350px; 
+            padding: 10px; 
+            margin: 0;
+            border-radius: 8px; 
+            font-weight: bold; 
+            text-align: center;
+            display: none; 
+            z-index: 1000; 
+            border: 1px solid; /* Added standard border here for consistency */
+        }
+        /* ---------------------------------------------------- */
+        
+        @media (max-width:768px)
+        {
+            .container1{
+                display: flex;
+                flex-direction: row;
+                width:70%;
+                height: 500px;
+                margin: auto;
+                align-items: center;
+                background-color: rgb(32, 34, 34);
+                border: 2px solid white;
+                border-radius: 20px;
+            }
+            .container1 img{
+               display: none; 
+            }   
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <img src="/Images/logo.png" alt="logo">
+                    SHUBHAM's CodeQuotient
+                </div>
+                <nav>
+                    <ul class="navlinks">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/Projects/projects.html">Projects</a></li>
+                        <li><a href="/Tutorials/tutorials.html">Tutorials</a></li>
+                        <li><a href="/Datasets/datasets.html">Datasets</a></li>
+                        <li><a href="/notes.html">Notes</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="right-section">
+                    <input type="text" placeholder="Search..." class="search-bar">  
+                    
+                    <div class="logged-out-buttons" id="logged-out-buttons">
+                        <a href="/login.html"><button class="header-button">Login</button></a>
+                        <a href="/signup.html"><button class="header-button">Signup</button></a>
+                    </div>
+
+                    <div class="user-info" id="user-info">
+                        <span class="user-name" id="display-user-email">Hello, User!</span>
+                        <button class="logout-button">Logout</button>
+                    </div>
+                </div>
+            </div>
+            <div class="header-bottom">
+                <ul class="secondary-nav">
+                    <input type="text" placeholder="Search..." class="search-bar">
+                    <li class="dropdown">
+                    <a href="#tutorials">Tutorials <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <div class="dropdown-content">
+                            <a href="/Tutorials/Github/github.html">GitHub</a>
+                            <a href="/Tutorials/Python/python.html">Python</a>
+                            <a href="/Tutorials/SQL/sql.html">Sql</a>
+                            <a href="/Tutorials/Pandas/pandas.html">Pandas</a>
+                            <a href="/Tutorials/Numpy/numpy.html">NumPy</a>
+                            <a href="/Tutorials/Matplot/matplot.html">Matplot</a>
+                            <a href="/Tutorials/R Programming/R programming.html">R programming</a>
+                            <a href="/Tutorials/PostgreSQL/postgresql.html">Postgre Sql</a>
+                            <a href="/Tutorials/Excel/excel.html">Excel</a>
+                            <a href="/Tutorials/Power Bi/powerbi.html">Power Bi</a>
+                    </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+    <div class="Login">
+        
+        <div class="container1">
+            <form id="signupForm"> 
+                <h2 style="color:rgb(0, 0, 0); text-align: center;">Sign Up</h2>
+                <input type="text" name="username" placeholder="Username" id="usernameInput" required />
+                <input type="email" name="email" placeholder="Enter your email id" id="emailInput" required>
+                <input type="password" name="password" placeholder="Enter password" id="passwordInput" required>
+                <button class="button" type="submit">Create account</button>
+                <p>Already have an account? <a href="/Login/login.html" style="color:deeppink; font-weight: bold;">Log in</a></p>
+            </form>
+            <img src="/Images/main1background.jpg" alt="">
+        </div>
+    </div>
+    <div id="message-display" style="display: none;">
+    </div>
+     <footer id="contact">
+        <div class="footercontainer">
+            <h3 class="langtitle">Connect with me for the better experience and the knowledge</h3>
+        </div>
+        <div class="social-links">
+                <a href="https://www.youtube.com/@LEARNWITHSKADAM_6457" style="--accent-color:red;" aria-label="Youtube"><img src="/Images/youtube.jpg" alt="Youtube" width="31px"></a>
+                <a href="https://github.com/Asura-824" style="--accent-color: rgb(52, 52, 52);" aria-label="Github"><img src="/Images/github.png" alt="Github" width="31px"></a>
+                <a href="https://www.linkedin.com/in/shubham-kadam-b8856031a?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BUAYDKko9S02GUSRNrD3vJg%3D%3D" style="--accent-color:rgb(25, 67, 233);" aria-label="Linkedin"><img src="/Images/linkedin.png" alt="Linkedin" width="35px"></a>
+        </div>
+            <p style="font-weight:bold;">Made with ❤️ by SHUBHAM</p><br>
+            <p>Code is like poetry Some get it,some don't<br>Those who don't get it,are <b style="color: #f80404;"> confused.</b><br>Those who get it,are even <b style="color:#f80404;">more confused.</b></p><br><br>
+            <p class="copyright">© 2025 SHUBHAM's CodeQuotient. All rights reserved.</p>
+    </footer>
+    
+<script>
+    // 1. MESSAGE DISPLAY FUNCTION
+    // Displays success, error, or info messages in the top-right corner.
+    function displayMessage(message, type) {
+        const displayElement = document.getElementById('message-display');
+        displayElement.textContent = message;
+        displayElement.style.display = 'block';
+
+        if (type === 'success') {
+            displayElement.style.backgroundColor = '#d4edda'; 
+            displayElement.style.color = '#155724';       
+            displayElement.style.borderColor = '#c3e6cb';   
+        } else if (type === 'error') {
+            displayElement.style.backgroundColor = '#f8d7da'; 
+            displayElement.style.color = '#721c24';       
+            displayElement.style.borderColor = '#f5c6cb';   
+        } else {
+            // Default/Info
+            displayElement.style.backgroundColor = '#fff3cd'; 
+            displayElement.style.color = '#856404'; 
+            displayElement.style.borderColor = '#ffeeba';
+        }
+        
+        // Hide the message after a delay (5 seconds)
+        setTimeout(() => {
+            displayElement.style.display = 'none';
+        }, 5000); 
+    }
+
+    // 2. HEADER UI UPDATE FUNCTION
+    // Toggles the visibility of the "Login/Signup" buttons versus "User Info/Logout"
+    function updateHeaderDisplay(isLoggedIn, userData = {}) {
+        const loggedOutButtons = document.getElementById('logged-out-buttons');
+        const userInfo = document.getElementById('user-info');
+        const userNameDisplay = document.getElementById('display-user-email');
+        
+        if (isLoggedIn && userData.email) {
+            const displayName = userData.username || userData.email;
+            userNameDisplay.textContent = `Hello, ${displayName}!`;
+            
+            userInfo.style.display = 'flex'; // Show user info
+            loggedOutButtons.style.display = 'none'; // Hide login/signup buttons
+
+        } else {
+            userInfo.style.display = 'none'; // Hide user info
+            loggedOutButtons.style.display = 'flex'; // Show login/signup buttons
+            userNameDisplay.textContent = 'Hello, User!'; 
+        }
+    }
+
+    // 3. LOGOUT HANDLER
+    async function handleLogout() {
+        try {
+            const response = await fetch('/api/logout', { method: 'POST' });
+            if (response.ok) {
+                displayMessage('You have been successfully logged out.', 'success'); 
+                updateHeaderDisplay(false); // Update UI to logged-out state
+            } else {
+                displayMessage('Logout failed. Please try again.', 'error');
+            }
+        } catch (error) {
+            console.error('Logout error:', error);
+            displayMessage('An unexpected error occurred during logout.', 'error');
+        }
+    }
+
+    // 4. MAIN DOM CONTENT LOADED LISTENER
+    document.addEventListener('DOMContentLoaded', () => {
+        const signupForm = document.getElementById('signupForm');
+        const logoutButton = document.querySelector('#user-info .logout-button');
+
+        // --- Session Check ---
+        async function checkSession() {
+            try {
+                const response = await fetch('/api/session');
+                const result = await response.json();
+                updateHeaderDisplay(result.loggedIn, result);
+            } catch (error) {
+                console.error('Session check failed:', error);
+                updateHeaderDisplay(false); 
+            }
+        }
+        checkSession();
+
+        // --- Signup Form Submission Handler (AJAX) ---
+        if (signupForm) {
+            signupForm.addEventListener('submit', async (e) => {
+                e.preventDefault(); 
+                
+                const username = document.getElementById('usernameInput').value;
+                const email = document.getElementById('emailInput').value;
+                const password = document.getElementById('passwordInput').value;
+                const submitButton = signupForm.querySelector('.button');
+
+                submitButton.textContent = 'Creating...';
+                submitButton.disabled = true;
+
+                try {
+                    const response = await fetch('/api/signup', { 
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, email, password })
+                    });
+                    
+                    const result = await response.json();
+
+                    if (response.ok && response.status === 201) {
+                        displayMessage('Signup successful! Redirecting to login...', 'success');
+                        signupForm.reset(); 
+                        
+                        // Redirect to login page after a short delay
+                        setTimeout(() => {
+                            window.location.href = '/login.html'; 
+                        }, 2000);
+
+                    } else {
+                        // Handle server-side errors
+                        displayMessage(result.message || 'Signup failed. Please try again.', 'error');
+                        submitButton.textContent = 'Create account';
+                        submitButton.disabled = false;
+                    }
+                } catch (error) {
+                    console.error('Signup error:', error);
+                    displayMessage('An unexpected network error occurred.', 'error');
+                    submitButton.textContent = 'Create account';
+                    submitButton.disabled = false;
+                }
+            });
+        }
+        
+        // --- Logout Button Listener ---
+        if (logoutButton) {
+            logoutButton.addEventListener('click', handleLogout);
+        }
+    });
+</script>
+</body>
+</html>

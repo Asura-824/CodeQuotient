@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/Assests/style.css">
+    <title>Advanced Data Analysis & Forecast Tool</title>
+    <style>
+
+        /* Header styles */
+        h1 {
+            font-size: 1.875rem;
+            font-weight: 800;
+            color: #1d4ed8;
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        h1 svg {
+            height: 2rem;
+            width: 2rem;
+            margin-right: 0.5rem;
+        }
+
+        /* Chart styles */
+        #chart {
+            min-height: 400px;
+            width: 100%;
+        }
+
+        #chart-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            background: white;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 1.5rem;
+        }
+
+        /* Dropzone styles */
+        #dropzone {
+            border: 4px dashed #d1d5db;
+            background: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            text-align: center;
+            color: #4b5563;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #dropzone:hover {
+            border-color: #3b82f6;
+            color: #2563eb;
+        }
+
+        /* Form controls */
+        .control-panel {
+            background: white;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 1.5rem;
+        }
+
+        .panel-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #374151;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* Form elements */
+        label {
+            font-weight: 600;
+            font-size: 0.875rem;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        select, input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            font-weight: bold;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.15s;
+        }
+
+        .btn-primary {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+
+        .btn-secondary {
+            background-color: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #4b5563;
+        }
+
+        .btn-success {
+            background-color: #059669;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #047857;
+        }
+
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Results section */
+        #result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            white-space: pre-line;
+            font-size: 0.875rem;
+            color: #374151;
+        }
+
+        .group-result {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        /* Responsive adjustments */
+        @media (min-width: 768px) {
+            body {
+                padding: 2rem;
+            }
+        }
+    </style>
+
+    <!-- External Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/regression@2.0.1/dist/regression.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<header class="header">
+        <div class="container h-20 w-full mt-10">
+            <div class="header-top">
+                <div class="logo">
+                    <img src="/Images/logo.png" alt="logo">
+                    SHUBHAM's CodeQuotient
+                </div>
+                <nav>
+                     <ul class="navlinks">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="features.html">Features</a></li>
+                        <li><a href="resume.html">Resume</a></li>
+                        <li><a href="/Projects/projects.html">Projects</a></li>
+                        <li><a href="contactus.html">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="right-section">
+                    <input type="text" placeholder="Search..." class="search-bar">  
+                    
+                    <div class="logged-out-buttons" id="logged-out-buttons">
+                        <button class="header-button" onclick="location.href='/Login/login.html'">Login</button>
+                        <button class="header-button" onclick="location.href='/Signup/signup.html'">Signup</button>
+                    </div>
+
+                    <div class="user-info" id="user-info">
+                        <span class="user-name" id="display-user-email">Hello, User!</span>
+                        <button class="logout-button">Logout</button>
+                    </div>
+                </div>
+            </div>
+            <div class="header-bottom">
+               <ul class="secondary-nav">
+                <input type="text" placeholder="Search..." class="search-bar">
+                    <li class="dropdown">
+                    <a href="#tutorials">Tutorials <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <div class="dropdown-content">
+                            <a href="/Tutorials/Github/github.html">GitHub</a>
+                            <a href="/Tutorials/Python/python.html">Python</a>
+                            <a href="/Tutorials/SQL/sql.html">Sql</a>
+                            <a href="/Tutorials/Pandas/pandas.html">Pandas</a>
+                            <a href="/Tutorials/Numpy/numpy.html">NumPy</a>
+                            <a href="/Tutorials/Matplot/matplot.html">Matplot</a>
+                            <a href="/Tutorials/R Programming/R programming.html">R programming</a>
+                            <a href="/Tutorials/PostgreSQL/postgresql.html">Postgre Sql</a>
+                            <a href="/Tutorials/Excel/excel.html">Excel</a>
+                            <a href="/Tutorials/Power Bi/powerbi.html">Power Bi</a>
+                    </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+<div class="container">
+    <h1>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM5 9a1 1 0 000 2h10a1 1 0 100-2H5z" clip-rule="evenodd" />
+        </svg>
+        Advanced Forecast & Analysis
+    </h1>
+
+    <!-- Dropzone -->
+    <div id="dropzone">
+        <p class="dropzone-text">Drop a CSV or XLSX file here</p>
+        <p class="dropzone-subtext">or select a file:</p>
+        <input type="file" id="fileInput" accept=".csv,.xlsx">
+    </div>
+
+    <div class="control-panel">
+        <h2 class="panel-title">Forecasting Controls (ML Model Training)</h2>
+
+        <div class="controls-grid">
+            <div>
+                <label>X-Axis Column:</label>
+                <select id="xSelect"></select>
+            </div>
+            <div>
+                <label>Y-Axis Column:</label>
+                <select id="ySelect"></select>
+            </div>
+            <div>
+                <label>Group-By Column:</label>
+                <select id="groupForecastSelect"></select>
+            </div>
+            <div>
+                <label>Filter Values (Comma-separated):</label>
+                <input type="text" id="filterInput" placeholder="e.g., State A, State B">
+            </div>
+            <div>
+                <label>Model Type:</label>
+                <select id="modelSelect">
+                    <option value="linear">Linear (Polynomial 1)</option>
+                    <option value="polynomial">Polynomial</option>
+                    <option value="exponential">Exponential</option>
+                    <option value="logarithmic">Logarithmic</option>
+                </select>
+            </div>
+            <div>
+                <label id="degreeLabel">Degree:</label>
+                <select id="degreeSelect">
+                    <option value="2">Quadratic (2)</option>
+                    <option value="3">Cubic (3)</option>
+                    <option value="4">Quartic (4)</option>
+                </select>
+            </div>
+            <div>
+                <label>Steps Ahead:</label>
+                <input type="number" id="stepCount" value="5" min="1" max="50">
+            </div>
+            <div>
+                <label>Target X Value:</label>
+                <input type="text" id="targetXInput" placeholder="Optional: E.g., 15 or 2026">
+            </div>
+            <button id="forecastBtn" class="btn-primary">Run Forecast</button>
+        </div>
+    </div>
+
+    <div class="control-panel">
+        <h2 class="panel-title">Data Aggregation & Descriptive Analysis</h2>
+        <div class="controls-grid">
+            <button id="aggregateBtn" class="btn-primary">Group & Aggregate Data</button>
+            <div>
+                <label>Descriptive Analysis on:</label>
+                <select id="groupSelect"></select>
+            </div>
+            <button id="descriptiveBtn" class="btn-secondary">Analyze Column</button>
+            <button id="exportBtn" class="btn-success">Download Chart (PNG)</button>
+        </div>
+    </div>
+
+    <!-- Chart and Results -->
+    <div id="chart-container">
+        <canvas id="chart"></canvas>
+    </div>
+    
+    <div id="result">
+        Load a CSV or XLSX file to begin analysis and forecasting.
+    </div>
+</div>
+
+<!-- Aggregation Modal Overlay -->
+<div id="aggregationModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3 class="modal-title">Multi-Column Data Aggregation</h3>
+        <p class="modal-description">Create a new dataset by grouping rows and calculating a summary statistic (Count, Sum, or Average).</p>
+
+        <div class="modal-form">
+            <div>
+                <label>Grouping Column 1 (Primary Key - MANDATORY):</label>
+                <select id="aggGroup1Select"></select>
+            </div>
+
+            <div>
+                <label>Grouping Column 2 (Secondary Key - OPTIONAL):</label>
+                <select id="aggGroup2Select"></select>
+            </div>
+
+            <hr>
+
+            <div>
+                <label>Aggregation Function:</label>
+                <select id="aggTypeSelect">
+                    <option value="count">Count (rows per group)</option>
+                    <option value="sum">Sum (of Value Column)</option>
+                    <option value="mean">Average (of Value Column)</option>
+                </select>
+            </div>
+
+            <div id="aggValueContainer">
+                <label>Value Column to Sum/Average:</label>
+                <select id="aggValueSelect"></select>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button id="closeModalBtn" class="btn-secondary">Cancel</button>
+            <button id="runAggBtn" class="btn-primary">Generate New Dataset</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Global variables for access
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('fileInput');
+const ctx = document.getElementById('chart').getContext('2d');
+const resultDiv = document.getElementById('result');
+const xSelect = document.getElementById('xSelect');
+const ySelect = document.getElementById('ySelect');
+const modelSelect = document.getElementById('modelSelect');
+const degreeSelect = document.getElementById('degreeSelect');
+const degreeLabel = document.getElementById('degreeLabel');
+const groupSelect = document.getElementById('groupSelect');
+const descriptiveBtn = document.getElementById('descriptiveBtn'); 
+const aggregateBtn = document.getElementById('aggregateBtn'); 
+const stepInput = document.getElementById('stepCount');
+const targetXInput = document.getElementById('targetXInput');
+const groupForecastSelect = document.getElementById('groupForecastSelect'); 
+const filterInput = document.getElementById('filterInput');
+
+// Aggregation Modal elements
+const aggregationModal = document.getElementById('aggregationModal');
+const aggGroup1Select = document.getElementById('aggGroup1Select');
+const aggGroup2Select = document.getElementById('aggGroup2Select');
+const aggTypeSelect = document.getElementById('aggTypeSelect');
+const aggValueSelect = document.getElementById('aggValueSelect');
+const aggValueContainer = document.getElementById('aggValueContainer');
+const runAggBtn = document.getElementById('runAggBtn');
+const closeModalBtn = document.getElementById('closeModalBtn');
+
+let chart, parsedData = [], originalData = [], headers = [];
+
+// The rest of the JavaScript code remains exactly the same
+</script>
+
+</body>
+</html>

@@ -173,9 +173,10 @@
         font-size: 1rem;
     }
     .myskills li {
-        background: rgba(180, 179, 179, 0.9);
+        background: rgb(255, 245, 245) ;
         padding: 1rem 2rem;
         color:black;
+        border: 1px solid deeppink;
         border-radius: 4px;
         width: 180px;
         border-radius: 20px;
@@ -228,9 +229,10 @@
         font-size: 1rem;
     }
     .myprojects li {
-        background:  rgba(180, 179, 179, 0.9);
+        background:   rgb(255, 245, 245);
         padding: 3rem 2rem;
         border-radius: 4px;
+        border:  1px solid deeppink;
         border-radius: 20px;
         width: 180px;
         height: 150px;
@@ -498,17 +500,24 @@
                 <nav class="nav">
                     <ul class="navlinks">
                         <li><a href="index.html">Home</a></li>
-                        <li><a href="Projects\projects.html">Projects</a></li>
-                        <li><a href="Tutorials\tutorials.html">Tutorials</a></li>
-                        <li><a href="Datasets\datasets.html">Datasets</a></li>
-                        <li><a href="notes.html">Notes</a></li>
-                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="features.html">Features</a></li>
+                        <li><a href="resume.html">Resume</a></li>
+                        <li><a href="/Projects/projects.html">Projects</a></li>
+                        <li><a href="contactus.html">Contact</a></li>
                     </ul>
                 </nav>
                 <div class="right-section">
-                    <input type="text" placeholder="Search..." class="search-bar">
-                    <button onclick="location.href='/Login/login.html'" class="header-button">Login</button>
-                    <button class="header-button">Signup</button>
+                    <input type="text" placeholder="Search..." class="search-bar">  
+                    
+                    <div class="logged-out-buttons" id="logged-out-buttons">
+                        <button class="header-button" onclick="location.href='/Login/login.html'">Login</button>
+                        <button class="header-button" onclick="location.href='/Signup/signup.html'">Signup</button>
+                    </div>
+
+                    <div class="user-info" id="user-info">
+                        <span class="user-name" id="display-user-email">Hello, User!</span>
+                        <button class="logout-button">Logout</button>
+                    </div>
                 </div>
             </div>
             <div class="header-bottom">
@@ -539,7 +548,7 @@
                         <li><a href="/Tutorials/tutorials.html">Tutorials</a></li>
                         <li><a href="/Datasets/datasets.html">Datasets</a></li>
                         <li><a href="/notes.html">Notes</a></li>
-                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="/contactus.html">Contact</a></li>
                     </ul>
                 </nav>
                 <div class="right-section">
@@ -721,47 +730,6 @@
                 </div>
             </div>
         </div>
-        <div id="contributors" style="background-color: #f0f4f8; padding: 40px 20px; height: 680px; color: #000;">
-            <h2 style="text-align: center; font-size: 2em; margin-bottom: 30px;">Meet Our Contributors</h2>
-            <div style="max-width: 1000px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
-                <!-- Contributor Card 1 -->
-                <div style="flex: 1 1 280px; background: white; padding: 20px; height: 240px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <h3 style="margin-bottom: 10px;">SHUBHAM</h3>
-                    <p style="color: #007bff; font-weight: bold;">Founder, Educator, Data Analyst</p>
-                    <p>Architect of SHUBHAM's CodeQuotient. Designs tutorials, builds dashboards, develops projects, and curates datasets to simplify data science for learners.</p>
-                </div>
-                <!-- Contributor Card 2 -->
-                <div style="flex: 1 1 280px; background: white; padding: 20px; height: 240px;border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <h3 style="margin-bottom: 10px;">Priya S.</h3>
-                    <p style="font-weight: bold; color: #007bff;">Content Reviewer</p>
-                    <p>Ensures clarity and accuracy in tutorials and worksheets, making technical concepts student-friendly.</p>
-                </div>
-                <!-- Contributor Card 3 -->
-                <div style="flex: 1 1 280px; background: white; padding: 20px; height: 240px;border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <h3 style="margin-bottom: 10px;">Arjun M.</h3>
-                    <p style="color: #007bff; font-weight: bold;">Learning Experience Tester</p>
-                    <p>Provides usability feedback on tutorials and dashboards to ensure smooth navigation and learner engagement.</p>
-                </div>
-                <!-- Contributor Card 4 -->
-                <div style="flex: 1 1 280px; background: white; padding: 20px;height: 240px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <h3 style="margin-bottom: 10px;">Meera T.</h3>
-                    <p style="font-weight: bold; color: #007bff;">Educator Advisor</p>
-                    <p>Provides feedback on classroom usability and helps adapt resources for middle school STEM environments.</p>
-                </div>
-                <!-- Contributor Card 5 -->
-                <div style="flex: 1 1 280px; background: white; padding: 20px; height: 240px;border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <h3 style="margin-bottom: 10px;">Sneha K.</h3>
-                    <p style="font-weight: bold; color: #007bff;">Visual Design Assistant</p>
-                    <p>Supports the creation of engaging posters, worksheets, and infographics for classroom and online learners.</p>
-                </div>
-                <!-- Contributor Card 6 -->
-                <div style="flex: 1 1 280px; background: white; padding: 20px; height: 240px;border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <h3 style="margin-bottom: 10px;">Gayatri J.</h3>
-                    <p style="font-weight: bold; color: #007bff;">Git & Web Integration Mentor</p>
-                    <p>Guides learners through Git/GitHub workflows and helps integrate web design effects into educational projects.</p>
-                </div>
-            </div>
-        </div>
     </section>
     
   
@@ -771,7 +739,7 @@
         </div>
         <div class="social-links">
                 <a href="https://www.youtube.com/@LEARNWITHSKADAM_6457" style="--accent-color:red;" aria-label="Youtube"><img src="/Images/youtube.jpg" alt="Youtube" width="31px"></a>
-                <a href="https://github.com/shubh645" style="--accent-color: rgb(52, 52, 52);" aria-label="Github"><img src="/Images/github.png" alt="Github" width="31px"></a>
+                <a href="https://github.com/Asura-824" style="--accent-color: rgb(52, 52, 52);" aria-label="Github"><img src="/Images/github.png" alt="Github" width="31px"></a>
                 <a href="https://www.linkedin.com/in/shubham-kadam-b8856031a?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BUAYDKko9S02GUSRNrD3vJg%3D%3D" style="--accent-color:rgb(25, 67, 233);" aria-label="Linkedin"><img src="/Images/linkedin.png" alt="Linkedin" width="35px"></a>
         </div>
             <p style="font-size:bold;">Made with ❤️ by SHUBHAM</p><br>

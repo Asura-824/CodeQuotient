@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="/Assests/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="icon" style="border-radius:50%;" href="/Images/myimage.jpg" type="image/jpg">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js">
+  <title>Rock Paper Scissors</title>
+  <style>
+    .gamepage {
+      background-color: #f0f0f0;
+      padding: 50px 20px;
+      height: max-content;
+    }
+    .game-container {
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    .game-container h1, p {
+      text-align: center;
+      margin-bottom: 20px;
+      color: black;
+    }
+    .choices{
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+    .choices button {
+      margin: 10px;
+      padding: 15px 25px;
+      font-size: 18px;
+      cursor: pointer;
+      border: none;
+      width: 200px;
+      border-radius: 8px;
+      background-color: #007bff;
+      color: white;
+      transition: background 0.3s;
+    }
+    .choices button:hover {
+      background-color: #0056b3;
+    }
+    .result-text {
+      font-size: 24px;
+      margin: 20px 0;
+      font-weight: bold;
+      color: black;
+    }
+    .gif-display {
+      width: 300px;
+      margin: 20px auto;
+      display: none;
+    }
+    #play-again {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 20px;
+      display: none;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #play-again:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <img src="/Images/logo.png" alt="logo">
+                    SHUBHAM's CodeQuotient
+                </div>
+                <nav>
+                     <ul class="navlinks">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="features.html">Features</a></li>
+                        <li><a href="resume.html">Resume</a></li>
+                        <li><a href="/Projects/projects.html">Projects</a></li>
+                        <li><a href="contactus.html">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="right-section">
+                    <input type="text" placeholder="Search..." class="search-bar">  
+                    
+                    <div class="logged-out-buttons" id="logged-out-buttons">
+                        <button class="header-button" onclick="location.href='/Login/login.html'">Login</button>
+                        <button class="header-button" onclick="location.href='/Signup/signup.html'">Signup</button>
+                    </div>
+
+                    <div class="user-info" id="user-info">
+                        <span class="user-name" id="display-user-email">Hello, User!</span>
+                        <button class="logout-button">Logout</button>
+                    </div>
+                </div>
+            </div>
+            <div class="header-bottom">
+               <ul class="secondary-nav">
+                <input type="text" placeholder="Search..." class="search-bar">
+                    <li class="dropdown">
+                    <a href="#tutorials">Tutorials <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <div class="dropdown-content">
+                            <a href="/Tutorials/Github/github.html">GitHub</a>
+                            <a href="/Tutorials/Python/python.html">Python</a>
+                            <a href="/Tutorials/SQL/sql.html">Sql</a>
+                            <a href="/Tutorials/Pandas/pandas.html">Pandas</a>
+                            <a href="/Tutorials/Numpy/numpy.html">NumPy</a>
+                            <a href="/Tutorials/Matplot/matplot.html">Matplot</a>
+                            <a href="/Tutorials/R Programming/R programming.html">R programming</a>
+                            <a href="/Tutorials/PostgreSQL/postgresql.html">Postgre Sql</a>
+                            <a href="/Tutorials/Excel/excel.html">Excel</a>
+                            <a href="/Tutorials/Power Bi/powerbi.html">Power Bi</a>
+                    </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+<div class="gamepage">
+  <div class="game-container">
+    <h1>Let's Play Rock, Paper, Scissors!</h1>
+    <p>Welcome to the ultimate showdown of Rock, Paper, Scissors!</p>
+    <div class="choices">
+      <button onclick="play('rock')">🪨 Rock</button>
+      <button onclick="play('paper')">📄 Paper</button>
+      <button onclick="play('scissor')">✂️ Scissor</button>
+    </div>
+    <div id="result" class="result-text"></div>
+    <img id="gif" class="gif-display" src="" alt="Result GIF">
+    <button id="play-again" onclick="resetGame()">Play Again</button>
+  </div>
+</div>
+<footer id="contact">
+        <div class="footercontainer">
+            <h3 class="langtitle">Connect with me for the better experience and the knowledge</h3>
+        </div>
+        <div class="social-links">
+                <a href="https://www.youtube.com/@LEARNWITHSKADAM_6457" style="--accent-color:red;" aria-label="Youtube"><img src="/Images/youtube.jpg" alt="Youtube" width="31px"></a>
+                <a href="https://github.com/Asura-824" style="--accent-color: rgb(52, 52, 52);" aria-label="Github"><img src="/Images/github.png" alt="Github" width="31px"></a>
+                <a href="https://www.linkedin.com/in/shubham-kadam-b8856031a?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BUAYDKko9S02GUSRNrD3vJg%3D%3D" style="--accent-color:rgb(25, 67, 233);" aria-label="Linkedin"><img src="/Images/linkedin.png" alt="Linkedin" width="35px"></a>
+        </div>
+            <p style="font-size:bold;">Made with ❤️ by SHUBHAM</p><br>
+            <p>Code is like poetry Some get it,some don't<br>Those who don't get it,are <b style="color: #f80404;"> confused.</b><br>Those who get it,are even <b style="color:#f80404;">more confused.</b></p><br><br>
+            <p class="copyright">© 2025 SHUBHAM's CodeQuotient. All rights reserved.</p>
+    </footer>
+  <script>
+    function play(userChoice) {
+      const choices = ["rock", "paper", "scissor"];
+      const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+      const resultDiv = document.getElementById("result");
+      const gif = document.getElementById("gif");
+      const playAgainBtn = document.getElementById("play-again");
+
+      let result = "";
+
+      if (userChoice === computerChoice) {
+        result = "TIE";
+      } else if (
+        (userChoice === "rock" && computerChoice === "scissor") ||
+        (userChoice === "paper" && computerChoice === "rock") ||
+        (userChoice === "scissor" && computerChoice === "paper")
+      ) {
+        result = "YOU WON";
+        gif.src = "winner.gif"; // Replace with your actual GIF path
+        gif.style.display = "block";
+      } else {
+        result = "YOU LOST";
+      }
+
+      resultDiv.textContent = `You chose ${userChoice}, computer chose ${computerChoice}. ${result}`;
+      playAgainBtn.style.display = "inline-block";
+    }
+
+    function resetGame() {
+      document.getElementById("result").textContent = "";
+      document.getElementById("gif").style.display = "none";
+      document.getElementById("gif").src = "";
+      document.getElementById("play-again").style.display = "none";
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Result</title>
+</head>
+<body>
+  <h2 id="message"></h2>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    document.getElementById('message').textContent = params.get('message');
+  </script>
+</body>
+</html>

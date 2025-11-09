@@ -6,81 +6,94 @@
     <title>Login | SHUBHAM's CodeQuotient</title>
     <link rel="icon" style="border-radius:50%;" href="/Images/myimage.jpg" type="image/jpg">
     <link rel="stylesheet" href="/Assests/style.css">
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        .container1{
-            display: flex;
-            flex-direction: row;
-            width:70%;
-            height: 500px;
-            margin: auto;
-            align-items: center;
-            background-color:#F5F5F5;
-            border: 2px solid deeppink;
-            border-right: none;
-            border-radius: 20px;
-        }
-        form{
-            display: flex;
-            gap: 1rem;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 800px;
-            height: 300px;
-        }
-        .container1 img{
-            width: 50%;
-            height: 501px;
-            border-bottom-right-radius: 20px;
-            border-top-right-radius: 20px;
-        }
-        .Login{
-            background-color: rgb(255, 245, 245);
-            display: flex;
-            align-items: center;
-            height: 600px;
-            color: black;
-            padding: auto;
-        }
-        input{
-            width: 50%;
-            height: 50px;
-            margin: auto;
-            border-radius: 20px;
-            border: none;
-            text-align: center;
-        }
-        input::placeholder{
-            text-align: center;
-        }
-        .button{
-            width: 50%;
-            height: 50px;
-            margin: auto;
-            border-radius: 20px;
-            border: none;
-            background-color: #ff0066;
-            cursor: pointer;
-        }
-        @media (max-width:768px)
-        {
-            .container1{
+        /* --- Existing CSS from your original file --- */
+         .logged-out-buttons { display: flex; gap: 10px; } 
+         .user-info { display: none; align-items: center; gap: 10px; } 
+         /* The rest of your existing CSS styles for .container1, form, .Login, etc. */
+         .container1{
+             display: flex;
+             flex-direction: row;
+             width:70%;
+             height: 500px;
+             margin: auto;
+             align-items: center;
+             background-color:#F5F5F5;
+             border: 2px solid deeppink;
+             border-right: none;
+             border-radius: 20px;
+         }
+         .LOGIN{
+                background-color: rgb(255, 245, 245);
                 display: flex;
-                flex-direction: row;
-                width:70%;
-                height: 500px;
-                margin: auto;
                 align-items: center;
-                background-color: rgb(32, 34, 34);
-                border: 2px solid white;
-                border-radius: 20px;
-            }
-            .container1 img{
-               display: none; 
-            }   
-        }
+                flex-direction: column;
+                height: 600px;
+                width: 100%;
+                color: black;
+                padding: auto;
+         }
+         form{
+             display: flex;
+             gap: 1rem;
+             flex-direction: column;
+             justify-content: center;
+             align-items: center;
+             width: 800px;
+             height: max-content;
+         }
+         .container1 img{
+             width: 50%;
+             height: 501px;
+             border-bottom-right-radius: 20px;
+             border-top-right-radius: 20px;
+         }
+         .Login{
+             background-color: rgb(255, 245, 245);
+             display: flex;
+             align-items: center;
+             height: 600px;
+             color: black;
+             padding: auto;
+         }
+         input{
+             width: 50%;
+             height: 50px;
+             margin: auto;
+             border-radius: 20px;
+             border: none;
+             text-align: center;
+         }
+         input::placeholder{
+             text-align: center;
+         }
+         .button{
+             width: 50%;
+             height: 50px;
+             margin: auto;
+             border-radius: 20px;
+             border: none;
+             background-color: #ff0066;
+             cursor: pointer;
+         }
+         @media (max-width:768px)
+         {
+             .container1{
+                 display: flex;
+                 flex-direction: row;
+                 width:70%;
+                 height: 500px;
+                 margin: auto;
+                 align-items: center;
+                 background-color: rgb(32, 34, 34);
+                 border: 2px solid white;
+                 border-radius: 20px;
+             }
+             .container1 img{
+                display: none; 
+             }   
+         }
     </style>
 </head>
 <body>
@@ -94,7 +107,7 @@
                 </div>
                 <nav>
                     <ul class="navlinks">
-                        <li><a href="/index.html">Home</a></li>
+                        <li><a href="/">Home</a></li>
                         <li><a href="/Projects/projects.html">Projects</a></li>
                         <li><a href="/Tutorials/tutorials.html">Tutorials</a></li>
                         <li><a href="/Datasets/datasets.html">Datasets</a></li>
@@ -104,8 +117,16 @@
                 </nav>
                 <div class="right-section">
                     <input type="text" placeholder="Search..." class="search-bar">  
-                    <button class="header-button">Login</button>
-                    <button class="header-button">Signup</button>
+                    
+                    <div class="logged-out-buttons" id="logged-out-buttons">
+                        <a href="/login.html"><button class="header-button">Login</button></a>
+                        <a href="/signup.html"><button class="header-button">Signup</button></a>
+                    </div>
+
+                    <div class="user-info" id="user-info">
+                        <span class="user-name" id="display-user-email">Hello, User!</span>
+                        <button class="logout-button" id="logout-button">Logout</button>
+                    </div>
                 </div>
             </div>
             <div class="header-bottom">
@@ -127,36 +148,197 @@
                     </div>
                     </li>
                 </ul>
+                <div id="message-display" style="
+                    position: fixed; 
+                    top: 70px;
+                    bottom: auto;    /* 10px from the bottom */
+                    right: 10px;     /* 10px from the right */
+                    width: 70%;
+                    max-width: 350px; /* Adjusted max width for corner position */
+                    padding: 10px; 
+                    margin: 0;
+                    border-radius: 8px; /* Standard border radius */
+                    font-weight: bold; 
+                    text-align: center;
+                    display: none; 
+                    z-index: 1000;
+                    ">
+                </div>
             </div>
-        </div>
+            </div>
     </header>
+<div class="LOGIN">
     <div class="Login">
         <div class="container1">
-            <form>
+            <form method="post" id="loginForm">
                 <h2 style="color:rgb(0, 0, 0); text-align: center;">Welcomes to SHUBHAM'S CodeQuotient</h2>
                 <h4>Login to your account</h4>
-                <input type="email" placeholder="Enter your email id">
-                <input type="password" placeholder="Enter password">
-                <button class="button">Login</button>
+                <input type="email" name="email" placeholder="Enter your email id" id="emailInput" required>
+                <input type="password" name="password" placeholder="Enter password" required>
+                <button class="button" type="submit">Login</button>
+                <p>Don't have an account? <a href="/Signup/signup.html" style="color:deeppink; font-weight: bold;">Sign up</a></p>
             </form>
             <img src="/Images/main1background.jpg" alt="">
         </div>
     </div>
-     <footer id="contact">
+</div>
+    <footer id="contact">
         <div class="footercontainer">
-            <h3 class="langtitle">Connect with me for the better experience and the knowledge</h3>
+            <h3 class="langtitle">Connect with me for a better experience and knowledge</h3>
         </div>
         <div class="social-links">
                 <a href="https://www.youtube.com/@LEARNWITHSKADAM_6457" style="--accent-color:red;" aria-label="Youtube"><img src="/Images/youtube.jpg" alt="Youtube" width="31px"></a>
-                <a href="https://github.com/shubh645" style="--accent-color: rgb(52, 52, 52);" aria-label="Github"><img src="/Images/github.png" alt="Github" width="31px"></a>
+                <a href="https://github.com/Asura-824" style="--accent-color: rgb(52, 52, 52);" aria-label="Github"><img src="/Images/github.png" alt="Github" width="31px"></a>
                 <a href="https://www.linkedin.com/in/shubham-kadam-b8856031a?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BUAYDKko9S02GUSRNrD3vJg%3D%3D" style="--accent-color:rgb(25, 67, 233);" aria-label="Linkedin"><img src="/Images/linkedin.png" alt="Linkedin" width="35px"></a>
         </div>
-            <p style="font-size:bold;">Made with ❤️ by SHUBHAM</p><br>
-            <p>Code is like poetry Some get it,some don't<br>Those who don't get it,are <b style="color: #f80404;"> confused.</b><br>Those who get it,are even <b style="color:#f80404;">more confused.</b></p><br><br>
-            <p class="copyright">© 2025 SHUBHAM's CodeQuotient. All rights reserved.</p>
+        <p style="font-weight: bold;">Made with ❤️ by SHUBHAM</p><br>
+        <p>Code is like poetry. Some get it, some don't.<br>Those who don't get it are <b style="color: #f80404;">confused.</b><br>Those who get it are even <b style="color:#f80404;">more confused.</b></p><br><br>
+        <p class="copyright">© 2025 SHUBHAM's CodeQuotient. All rights reserved.</p>
     </footer>
-    
-<script>
-</script>
 </body>
+<script>
+    function displayMessage(message, type) {
+        const displayElement = document.getElementById('message-display');
+        displayElement.textContent = message;
+        displayElement.style.display = 'block';
+        displayElement.style.border = '1px solid';
+
+        if (type === 'success') {
+            displayElement.style.backgroundColor = '#d4edda'; 
+            displayElement.style.color = '#155724';       
+            displayElement.style.borderColor = '#c3e6cb';   
+        } else if (type === 'error') {
+            displayElement.style.backgroundColor = '#f8d7da'; 
+            displayElement.style.color = '#721c24';       
+            displayElement.style.borderColor = '#f5c6cb';   
+        } else {
+            displayElement.style.backgroundColor = '#fff3cd'; 
+            displayElement.style.color = '#856404'; 
+            displayElement.style.borderColor = '#ffeeba';
+        }
+    }
+
+    // UPDATED FUNCTION: KEEPS THE LOGIN FORM VISIBLE
+    function updateHeaderDisplay(isLoggedIn, userData = {}) {
+        const loggedOutButtons = document.getElementById('logged-out-buttons');
+        const userInfo = document.getElementById('user-info');
+        const userNameDisplay = document.getElementById('display-user-email');
+        const loginFormContainer = document.querySelector('.Login');
+        
+        if (isLoggedIn && userData.email) {
+            const displayName = userData.username || userData.email;
+            userNameDisplay.textContent = `Hello, ${displayName}!`;
+            
+            // Action: Show user info
+            userInfo.style.display = 'flex';
+            
+            // Action: Hide login/signup buttons (since they are now logged in)
+            loggedOutButtons.style.display = 'none';
+            
+            // CRITICAL CHANGE: DO NOT HIDE THE LOGIN CONTAINER
+            loginFormContainer.style.display = 'flex'; // Explicitly keep it visible (or remove this line) 
+            
+            // You may want to disable the form inputs after login, or change the form message.
+            // Example:
+            document.getElementById('loginForm').style.opacity = '0.5';
+            document.getElementById('loginForm').style.pointerEvents = 'none';
+
+
+        } else {
+            // Logged out state:
+            userInfo.style.display = 'none';
+            loggedOutButtons.style.display = 'flex';
+            loginFormContainer.style.display = 'flex'; 
+            userNameDisplay.textContent = 'Hello, User!'; 
+            
+            // Reset form state:
+            document.getElementById('loginForm').style.opacity = '1';
+            document.getElementById('loginForm').style.pointerEvents = 'auto';
+        }
+    }
+
+    async function handleLogout() {
+        try {
+            const response = await fetch('/api/logout', { method: 'POST' });
+            if (response.ok) {
+                displayMessage('You have been successfully logged out.', 'success');
+                updateHeaderDisplay(false); // Update UI to logged-out state
+                // Clear form inputs after logout
+                document.getElementById('emailInput').value = '';
+                document.getElementById('loginForm').elements.password.value = '';
+            } else {
+                displayMessage('Logout failed. Please try again.', 'error');
+            }
+        } catch (error) {
+            console.error('Logout error:', error);
+            displayMessage('An unexpected error occurred during logout.', 'error');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const loginForm = document.getElementById('loginForm');
+        const logoutButton = document.getElementById('logout-button');
+
+        // 1. Initial Session Check on Page Load
+        async function checkSession() {
+            try {
+                const response = await fetch('/api/session');
+                const result = await response.json();
+                updateHeaderDisplay(result.loggedIn, result);
+            } catch (error) {
+                console.error('Session check failed:', error);
+                updateHeaderDisplay(false); 
+            }
+        }
+        checkSession();
+
+        // 2. Handle Logout Button
+        if (logoutButton) {
+            logoutButton.addEventListener('click', handleLogout);
+        }
+        
+        // 3. Handle AJAX Form Submission
+        if (loginForm) {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault(); 
+                
+                const email = document.getElementById('emailInput').value;
+                const password = loginForm.elements.password.value;
+                const loginButton = loginForm.querySelector('.button');
+
+                loginButton.textContent = 'Logging in...';
+                loginButton.disabled = true;
+
+                try {
+                    const response = await fetch('/api/login', { 
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password })
+                    });
+                    
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        displayMessage('Login successful!', 'success');
+                        updateHeaderDisplay(true, result); 
+                        loginButton.textContent = 'Login'; // Reset button text
+                        loginButton.disabled = false;
+                        
+                    } else {
+                        displayMessage(result.message || 'Invalid email or password.', 'error');
+                        updateHeaderDisplay(false); // Ensure header reverts if logic was flawed
+                        loginButton.textContent = 'Login';
+                        loginButton.disabled = false;
+                    }
+                } catch (error) {
+                    console.error('Login error:', error);
+                    displayMessage('An unexpected error occurred. Please try again.', 'error');
+                    loginButton.textContent = 'Login';
+                    loginButton.disabled = false;
+                }
+            });
+        }
+    });
+</script>
+<script src="/Script/script.js"></script>
 </html>

@@ -19,19 +19,26 @@
                     SHUBHAM's CodeQuotient
                 </div>
                 <nav>
-                    <ul class="navlinks">
+                     <ul class="navlinks">
                         <li><a href="/index.html">Home</a></li>
+                        <li><a href="/features.html">Features</a></li>
+                        <li><a href="/resume.html">Resume</a></li>
                         <li><a href="/Projects/projects.html">Projects</a></li>
-                        <li><a href="/Tutorials/tutorials.html">Tutorials</a></li>
-                        <li><a href="/Datasets/datasets.html">Datasets</a></li>
-                        <li><a href="/notes.html">Notes</a></li>
-                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="/contactus.html">Contact</a></li>
                     </ul>
                 </nav>
                 <div class="right-section">
-                  <input type="text" placeholder="Search..." class="search-bar">
-                    <button class="header-button" onclick="location.href='/Login/login.html'">Login</button>
-                    <button class="header-button">Signup</button>
+                    <input type="text" placeholder="Search..." class="search-bar">  
+                    
+                    <div class="logged-out-buttons" id="logged-out-buttons">
+                        <button class="header-button" onclick="location.href='/Login/login.html'">Login</button>
+                        <button class="header-button" onclick="location.href='/Signup/signup.html'">Signup</button>
+                    </div>
+
+                    <div class="user-info" id="user-info">
+                        <span class="user-name" id="display-user-email">Hello, User!</span>
+                        <button class="logout-button">Logout</button>
+                    </div>
                 </div>
             </div>
             <div class="header-bottom">
@@ -68,42 +75,70 @@
                       <div class="langinfo">
                         <h1 class="langtitle">QR Code Generator</h1>
                         <p class="langdecs">This project involves creating a QR code using Python. It allows users to input text or URLs and generates a corresponding QR code image. The project utilizes libraries such as qrcode and Pillow for image processing.</p>
+                        <button class="button1" onclick="window.open('https://github.com/Asura-824/QR-Generator', '_blank')">
+                          <i class="fas fa-angle-left"></i>
+                          <i class="fas fa-angle-right"></i> Code
+                        </button>
                       </div>
                     </div>
                     <div class="language">
                       <div class="langinfo">
                         <h1 class="langtitle">Phone Data Masking</h1>
                         <p class="langdecs">This project focuses on masking sensitive information, specifically phone numbers, in a dataset. It involves using regular expressions and string manipulation techniques in Python to anonymize personal data while retaining its format.</p>
+                        <button class="button1" onclick="window.open('https://github.com/Asura-824/Phno_Detailtracker', '_blank')">
+                          <i class="fas fa-angle-left"></i>
+                          <i class="fas fa-angle-right"></i> Code
+                        </button>
                       </div>
+                    </div>
+                    <div class="language">
+                            <div class="langinfo">
+                              <h1 class="langtitle">EV Population</h1>
+                              <p class="langdecs">This project focuses on analyzing electric vehicle (EV) data in Washington State (WA) to understand trends, adoption rates, and other relevant metrics related to EV usage and infrastructure.</p>
+                              <button class="button1" onclick="window.open('https://github.com/Asura-824/Electric-Vehicle-WA', '_blank')">
+                                <i class="fas fa-angle-left"></i>
+                                <i class="fas fa-angle-right"></i> Code
+                              </button>
+                            </div>
                     </div>
                     <div class="language">
                             <div class="langinfo">
                               <h1 class="langtitle">Indian Census</h1>
                               <p class="langdecs">In this project, I have analyzed the Indian Census data from 2011 to extract meaningful insights about the population distribution, literacy rates, and other demographic factors across different states and union territories in India.</p>
+                              <button class="button1" onclick="window.open('https://github.com/Asura-824/IND-Census-2011--analysis', '_blank')">
+                                <i class="fas fa-angle-left"></i>
+                                <i class="fas fa-angle-right"></i> Code
+                              </button>
                             </div>
                      </div>
                      <div class="language">
                             <div class="langinfo">
                               <h1 class="langtitle">Netflix</h1>
                               <p class="langdecs">This project focuses on analyzing Netflix user data to understand various aspects of customer behavior, subscription patterns, and engagement. It involves loading the dataset, performing initial data inspection, and setting the groundwork for deeper analytical insights.</p>
+                              <button class="button1" onclick="window.open('https://github.com/Asura-824/Netflix-analysis', '_blank')">
+                                <i class="fas fa-angle-left"></i>
+                                <i class="fas fa-angle-right"></i> Code
+                              </button>
                             </div>
                      </div>
                      <div class="language">
                             <div class="langinfo">
                               <h1 class="langtitle">Covid-19</h1>
                               <p class="langdecs">This project exploratory do the data analysis of COVID-19 statistics using publicly available datasets. The analysis involves loading, cleaning, and summarizing key metrics related to the pandemic.</p>
+                              <button class="button1" onclick="window.open('https://github.com/Asura-824/Covid-19-analysis', '_blank')">
+                                <i class="fas fa-angle-left"></i>
+                                <i class="fas fa-angle-right"></i> Code
+                              </button>
                             </div>
                      </div>
                      <div class="language">
                             <div class="langinfo">
                               <h1 class="langtitle">Spotify</h1>
                               <p class="langdecs">This project is a data analysis of a Spotify dataset, exploring user listening habits and track information. The analysis is performed in a Jupyter notebook (Spotify.ipynb)  using Python and various data science libraries.</p>
-                            </div>
-                      </div>
-                      <div class="language">
-                            <div class="langinfo">
-                              <h1 class="langtitle">EV Population</h1>
-                              <p class="langdecs">This project focuses on analyzing electric vehicle (EV) data in Washington State (WA) to understand trends, adoption rates, and other relevant metrics related to EV usage and infrastructure.</p>
+                              <button class="button1" onclick="window.open('https://github.com/Asura-824/Spotify-analysis', '_blank')">
+                                <i class="fas fa-angle-left"></i>
+                                <i class="fas fa-angle-right"></i> Code
+                              </button>
                             </div>
                       </div>
               </div>
@@ -114,7 +149,7 @@
         </div>
            <div class="social-links">
                 <a href="https://www.youtube.com/@LEARNWITHSKADAM_6457" style="--accent-color:red;" aria-label="Youtube"><img src="/Images/youtube.jpg" alt="Youtube" width="31px"></a>
-                <a href="https://github.com/shubh645" style="--accent-color: rgb(52, 52, 52);" aria-label="Github"><img src="/Images/github.png" alt="Github" width="31px"></a>
+                <a href="https://github.com/Asura-824" style="--accent-color: rgb(52, 52, 52);" aria-label="Github"><img src="/Images/github.png" alt="Github" width="31px"></a>
                 <a href="https://www.linkedin.com/in/shubham-kadam-b8856031a?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BUAYDKko9S02GUSRNrD3vJg%3D%3D" style="--accent-color:rgb(25, 67, 233);" aria-label="Linkedin"><img src="/Images/linkedin.png" alt="Linkedin" width="35px"></a>
         </div>
             <p style="font-size:bold;">Made with ❤️ by SHUBHAM</p><br>

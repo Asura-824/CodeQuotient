@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-    <header class="header">
+<header class="header">
         <div class="container">
             <div class="header-top">
                 <div class="logo">
@@ -18,26 +18,34 @@
                     SHUBHAM's CodeQuotient
                 </div>
                 <nav>
-                    <ul class="navlinks">
+                     <ul class="navlinks">
                         <li><a href="/index.html">Home</a></li>
+                        <li><a href="/features.html">Features</a></li>
+                        <li><a href="/resume.html">Resume</a></li>
                         <li><a href="/Projects/projects.html">Projects</a></li>
-                        <li><a href="/Tutorials/tutorials.html">Tutorials</a></li>
-                        <li><a href="/Datasets/datasets.html">Datasets</a></li>
-                        <li><a href="/notes.html">Notes</a></li>
-                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="/contactus.html">Contact</a></li>
                     </ul>
                 </nav>
                 <div class="right-section">
-                    <input type="text" placeholder="Search..." class="search-bar">
-                    <button class="header-button">Login</button>
-                    <button class="header-button">Signup</button>
+                    <input type="text" placeholder="Search..." class="search-bar">  
+                    
+                    <div class="logged-out-buttons" id="logged-out-buttons">
+                        <button class="header-button" onclick="location.href='/Login/login.html'">Login</button>
+                        <button class="header-button" onclick="location.href='/Signup/signup.html'">Signup</button>
+                    </div>
+
+                    <div class="user-info" id="user-info">
+                        <span class="user-name" id="display-user-email">Hello, User!</span>
+                        <button class="logout-button">Logout</button>
+                    </div>
                 </div>
             </div>
             <div class="header-bottom">
-                <ul class="secondary-nav">
-                    <input type="text" placeholder="Search..." class="search-bar">
-                    <li class="dropdown"><a href="#tutorials">Tutorials <i class="fas fa-chevron-down dropdown-icon"></i></a>
-                        <div class="dropdown-content">
+               <ul class="secondary-nav">
+                <input type="text" placeholder="Search..." class="search-bar">
+                    <li class="dropdown">
+                    <a href="#tutorials">Tutorials <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <div class="dropdown-content">
                             <a href="/Tutorials/Github/github.html">GitHub</a>
                             <a href="/Tutorials/Python/python.html">Python</a>
                             <a href="/Tutorials/SQL/sql.html">Sql</a>
@@ -48,7 +56,7 @@
                             <a href="/Tutorials/PostgreSQL/postgresql.html">Postgre Sql</a>
                             <a href="/Tutorials/Excel/excel.html">Excel</a>
                             <a href="/Tutorials/Power Bi/powerbi.html">Power Bi</a>
-                        </div>
+                    </div>
                     </li>
                 </ul>
             </div>
@@ -169,7 +177,7 @@
         </div>
         <div class="social-links">
                 <a href="https://www.youtube.com/@LEARNWITHSKADAM_6457" style="--accent-color:red;" aria-label="Youtube"><img src="/Images/youtube.jpg" alt="Youtube" width="31px"></a>
-                <a href="https://github.com/shubh645" style="--accent-color: rgb(52, 52, 52);" aria-label="Github"><img src="/Images/github.png" alt="Github" width="31px"></a>
+                <a href="https://github.com/Asura-824" style="--accent-color: rgb(52, 52, 52);" aria-label="Github"><img src="/Images/github.png" alt="Github" width="31px"></a>
                 <a href="https://www.linkedin.com/in/shubham-kadam-b8856031a?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BUAYDKko9S02GUSRNrD3vJg%3D%3D" style="--accent-color:rgb(25, 67, 233);" aria-label="Linkedin"><img src="/Images/linkedin.png" alt="Linkedin" width="35px"></a>
         </div>
             <p style="font-size:bold;">Made with ❤️ by SHUBHAM</p><br>
