@@ -131,28 +131,16 @@ if (!isDevelopment) {
 app.use(session(sessionConfig));
 
 // ----------------------------------------------------------------------
-// 💡 URL REDIRECT FOR INDEX.HTML
+// 💡 MODIFICATION: Removed the app.get('/') redirect. Let static middleware handle it.
 // ----------------------------------------------------------------------
 
-// Redirect the root path to /index.html so the filename appears in the URL.
-app.get('/', (req, res, next) => {
-    // Only redirect if the path is exactly '/' and not an API endpoint
-    if (req.originalUrl === '/' && !req.path.startsWith('/api')) {
-        return res.redirect('/index.html');
-    }
-    next();
-});
-
-// ----------------------------------------------------------------------
 // --- Static File Serving with Security Headers ---
-// ----------------------------------------------------------------------
-
-// Use path.resolve() instead of path.join(__dirname, '') for robustness in deployment environments
-const ROOT_PATH = path.resolve(__dirname);
-
 const staticOptions = {
     etag: true,
     lastModified: true,
+    // 💡 Added index: to explicitly tell express.static to serve index.html 
+    // when the base path (/) is requested.
+    index: ['index.html'], 
     setHeaders: (res, path) => {
         // Security headers
         res.set('X-Content-Type-Options', 'nosniff');
@@ -171,12 +159,12 @@ const staticOptions = {
 };
 
 // Serve static files with security configurations
-app.use('/', express.static(ROOT_PATH, staticOptions));
-app.use('/Projects', express.static(path.join(ROOT_PATH, 'Projects'), staticOptions));
-app.use('/Tutorials', express.static(path.join(ROOT_PATH, 'Tutorials'), staticOptions));
-app.use('/Datasets', express.static(path.join(ROOT_PATH, 'Datasets'), staticOptions));
-app.use('/Notes', express.static(path.join(ROOT_PATH, 'Notes'), staticOptions));
-app.use('/Images', express.static(path.join(ROOT_PATH, 'Images'), staticOptions));
+app.use('/', express.static(path.join(__dirname, ''), staticOptions));
+app.use('/Projects', express.static(path.join(__dirname, 'Projects'), staticOptions));
+app.use('/Tutorials', express.static(path.join(__dirname, 'Tutorials'), staticOptions));
+app.use('/Datasets', express.static(path.join(__dirname, 'Datasets'), staticOptions));
+app.use('/Notes', express.static(path.join(__dirname, 'Notes'), staticOptions));
+app.use('/Images', express.static(path.join(__dirname, 'Images'), staticOptions));
 
 // ----------------------------------------------------------------------
 // --- API Routes ---
@@ -283,8 +271,14 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Handle 404 errors
+// Handle 404 errors (This is what you are seeing!)
 app.use((req, res) => {
+    // 💡 Add an attempt to serve index.html if the URL is not found, 
+    // which can catch some client-side routing issues.
+    if (!req.path.startsWith('/api') && req.method === 'GET') {
+        return res.sendFile(path.join(__dirname, 'index.html'));
+    }
+    
     res.status(404).json({ error: { message: 'Resource not found' } });
 });
 
