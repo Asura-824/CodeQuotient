@@ -125,8 +125,8 @@
                     <input type="text" placeholder="Search..." class="search-bar">  
                     
                     <div class="logged-out-buttons" id="logged-out-buttons">
-                        <a href="/Login/login.html"><button class="header-button">Login</button></a>
-                        <a href="/signup.html"><button class="header-button">Signup</button></a>
+                        <a href="/login.html"><button class="header-button">Login</button></a>
+                        <a href="/Signup/signup.html"><button class="header-button">Signup</button></a>
                     </div>
 
                     <div class="user-info" id="user-info">
@@ -166,7 +166,7 @@
                 <input type="email" name="email" placeholder="Enter your email id" id="emailInput" required>
                 <input type="password" name="password" placeholder="Enter password" id="passwordInput" required>
                 <button class="button" type="submit">Create account</button>
-                <p>Already have an account? <a href="/Login/login.html" style="color:deeppink; font-weight: bold;">Log in</a></p>
+                <p>Already have an account? <a href="/login.html" style="color:deeppink; font-weight: bold;">Log in</a></p>
             </form>
             <img src="/Images/main1background.jpg" alt="">
         </div>
@@ -194,6 +194,7 @@
         const displayElement = document.getElementById('message-display');
         displayElement.textContent = message;
         displayElement.style.display = 'block';
+        displayElement.style.border = '1px solid';
 
         if (type === 'success') {
             displayElement.style.backgroundColor = '#d4edda'; 
@@ -240,6 +241,16 @@
     // 3. LOGOUT HANDLER
     async function handleLogout() {
         try {
+            // Added check to ensure logout is only processed if user is logged in
+            const checkResponse = await fetch('/api/session');
+            const sessionData = await checkResponse.json();
+            
+            if (!sessionData.loggedIn) {
+                displayMessage('You are already logged out.', 'info');
+                updateHeaderDisplay(false);
+                return;
+            }
+            
             const response = await fetch('/api/logout', { method: 'POST' });
             if (response.ok) {
                 displayMessage('You have been successfully logged out.', 'success'); 
@@ -299,7 +310,7 @@
                         
                         // Redirect to login page after a short delay
                         setTimeout(() => {
-                            window.location.href = '/Login/login.html'; 
+                            window.location.href = '/login.html'; // Corrected path to login.html
                         }, 2000);
 
                     } else {

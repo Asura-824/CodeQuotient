@@ -3,12 +3,37 @@ const path = require('path');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
+const cors = require('cors');
+const MongoStore = require('connect-mongo');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
+const compression = require('compression');
+require('dotenv').config();
+
+// Environment configuration
+const isDevelopment = process.env.NODE_ENV !== 'production';
+// FIXED: Combined environment variables for allowed origins more robustly
+const allowedOrigins = [
+    ...(process.env.ALLOWED_ORIGINS || '').split(',').filter(Boolean),
+    process.env.CLIENT_ORIGIN
+].filter(Boolean);
+
+
+// Security configurations
+const rateLimitConfig = {
+    windowMs: (process.env.RATE_LIMIT_WINDOW || 15) * 60 * 1000,
+    max: process.env.RATE_LIMIT_MAX || 100,
+    message: { error: 'Too many requests, please try again later.' }
+};
 
 const app = express();
 
+// Trust the proxy headers for secure cookies behind reverse proxies
+app.set('trust proxy', 1);
+
 // --- MongoDB Connection ---
-// !! IMPORTANT: Set your MongoDB Connection URI !!
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://MyAppUser:Shubhamsk123@cluster0.p6girvj.mongodb.net/?appName=Cluster0'; 
+// !! IMPORTANT: Ensure this MONGODB_URI is set as an Environment Variable on Vercel/Netlify !!
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://MyAppUser:Shubhamsk123@cluster0.p6girvj.mongodb.net/userDB?appName=Cluster0'; 
 
 mongoose.connect(MONGODB_URI)
     .then(() => console.log('MongoDB connected successfully.'))
@@ -21,7 +46,6 @@ const UserSchema = new mongoose.Schema({
     password: { type: String, required: true, select: false },
 });
 
-// Mongoose Pre-Save Hook: Hash password before saving (Registration)
 UserSchema.pre('save', async function(next) {
     if (this.isModified('password')) {
         this.password = await bcrypt.hash(this.password, 10);
@@ -29,7 +53,6 @@ UserSchema.pre('save', async function(next) {
     next();
 });
 
-// Mongoose Method: Compare password (Login)
 UserSchema.methods.comparePassword = function(candidatePassword) {
     return bcrypt.compare(candidatePassword, this.password);
 };
@@ -38,38 +61,129 @@ const User = mongoose.model('User', UserSchema);
 
 // ----------------------------------------------------------------------
 // --- Middleware ---
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+// Security middleware
+app.use(helmet({
+    contentSecurityPolicy: isDevelopment ? false : undefined,
+    crossOriginEmbedderPolicy: false
+}));
+app.use(compression());
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '10mb' }));
+app.use(rateLimit(rateLimitConfig));
 
-// --- Session Middleware Configuration ---
-app.use(session({
-    secret: 'YOUR_STRONG_RANDOM_SECRET_KEY_HERE', // !! IMPORTANT: CHANGE THIS!!
-    resave: false,
-    saveUninitialized: false,
-    cookie: { 
-        maxAge: 1000 * 60 * 60 * 24, // Session lasts 24 hours
-        secure: false // Set to true if using HTTPS/Production
-    } 
+// Custom security headers
+app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    next();
+});
+
+// Enhanced CORS Configuration
+app.use(cors({
+    origin: function(origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        
+        // FIXED: Use includes for better flexibility with multiple origins
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        
+        const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
+        return callback(new Error(msg), false);
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
-// --- Static File Serving ---
-app.use('/', express.static(path.join(__dirname, ''))); 
-app.use('/Projects', express.static(path.join(__dirname, 'Projects')));
-app.use('/Tutorials', express.static(path.join(__dirname, 'Tutorials')));
-app.use('/Datasets', express.static(path.join(__dirname, 'Datasets')));
-app.use('/Notes', express.static(path.join(__dirname, 'Notes')));
-app.use('/Images', express.static(path.join(__dirname, 'Images')));
-// Note: Ensure your signup.html and login.html are in the root directory (or update paths)
+// Enhanced Session Configuration
+const SESSION_SECRET = process.env.SESSION_SECRET || 'fallback-secret-local-only';
+
+const sessionConfig = {
+    store: MongoStore.create({
+        mongoUrl: MONGODB_URI,
+        collectionName: 'sessions',
+        ttl: 24 * 60 * 60, // 24 hours
+        autoRemove: 'native',
+        crypto: {
+            secret: SESSION_SECRET
+        }
+    }),
+    secret: SESSION_SECRET,
+    name: 'sessionId', // Don't use default connect.sid
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        secure: !isDevelopment, // Use secure cookies in production
+        sameSite: isDevelopment ? 'lax' : 'none', // Required for cross-site deployment
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+};
+
+// Apply session middleware with environment-specific settings
+if (!isDevelopment) {
+    app.set('trust proxy', 1);
+    sessionConfig.cookie.secure = true;
+}
+app.use(session(sessionConfig));
 
 // ----------------------------------------------------------------------
-// --- API Routes (Updated) ---
+// 💡 MODIFICATION START: Redirect root path to show index.html in URL
 // ----------------------------------------------------------------------
 
-// 🚀 NEW: GET: Check Session Status 
-// This is required by login.html and signup.html to update the header bar on page load.
+// Redirect the root path to /index.html so the filename appears in the URL.
+// This route must be defined BEFORE the static file middleware.
+app.get('/', (req, res, next) => {
+    // Only redirect if the path is exactly '/' and not an API endpoint
+    if (req.originalUrl === '/' && !req.path.startsWith('/api')) {
+        return res.redirect('/index.html');
+    }
+    next();
+});
+
+// ----------------------------------------------------------------------
+// 💡 MODIFICATION END
+// ----------------------------------------------------------------------
+
+// --- Static File Serving with Security Headers ---
+const staticOptions = {
+    etag: true,
+    lastModified: true,
+    setHeaders: (res, path) => {
+        // Security headers
+        res.set('X-Content-Type-Options', 'nosniff');
+        res.set('X-Frame-Options', 'SAMEORIGIN');
+        res.set('X-XSS-Protection', '1; mode=block');
+        
+        // Cache control based on file type
+        if (path.endsWith('.html')) {
+            res.set('Cache-Control', 'no-cache');
+        } else if (path.match(/\.(jpg|jpeg|png|gif|ico)$/)) {
+            res.set('Cache-Control', 'public, max-age=86400'); // 24 hours
+        } else {
+            res.set('Cache-Control', 'public, max-age=3600'); // 1 hour
+        }
+    }
+};
+
+// Serve static files with security configurations
+app.use('/', express.static(path.join(__dirname, ''), staticOptions));
+app.use('/Projects', express.static(path.join(__dirname, 'Projects'), staticOptions));
+app.use('/Tutorials', express.static(path.join(__dirname, 'Tutorials'), staticOptions));
+app.use('/Datasets', express.static(path.join(__dirname, 'Datasets'), staticOptions));
+app.use('/Notes', express.static(path.join(__dirname, 'Notes'), staticOptions));
+app.use('/Images', express.static(path.join(__dirname, 'Images'), staticOptions));
+
+// ----------------------------------------------------------------------
+// --- API Routes ---
+// ----------------------------------------------------------------------
+
+// GET: Check Session Status 
 app.get('/api/session', (req, res) => {
     if (req.session.user) {
-        // Return only non-sensitive public info for the client UI
         return res.json({
             loggedIn: true,
             username: req.session.user.username,
@@ -79,20 +193,22 @@ app.get('/api/session', (req, res) => {
     res.json({ loggedIn: false });
 });
 
-// ✅ FIXED: POST: Signup (Route name changed from /api/register to /api/signup)
+// POST: Signup 
 app.post('/api/signup', async (req, res) => {
     try {
         const { email, username, password } = req.body;
-
-        // The Mongoose pre-save hook handles password hashing before this is executed
+        
+        // Basic input validation
+        if (!email || !username || !password) {
+             return res.status(400).json({ message: 'All fields are required.' });
+        }
+        
         const newUser = await User.create({ email, username, password });
-
         return res.status(201).json({ 
             message: 'Registration successful!', 
-            userId: newUser._id // MongoDB uses _id
+            userId: newUser._id
         });
     } catch (err) {
-        // Mongoose error code for unique index violation (duplicate key) is 11000
         if (err.code === 11000) {
             return res.status(409).json({ message: 'Email or username already in use.' });
         }
@@ -101,32 +217,32 @@ app.post('/api/signup', async (req, res) => {
     }
 });
 
-// POST: Login (Unchanged, but now fully functional with MongoDB)
+// POST: Login 
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // Find user by email and explicitly retrieve the password hash
-        const user = await User.findOne({ email }).select('+password');
+        if (!email || !password) {
+             return res.status(400).json({ message: 'Email and password are required.' });
+        }
+        
+        // Added .select('+password') to retrieve the password hash
+        const user = await User.findOne({ email }).select('+password'); 
 
-        if (user) {
-            const match = await user.comparePassword(password);
+        if (user && await user.comparePassword(password)) {
+            // SUCCESS: Set the session data!
+            req.session.user = { 
+                id: user._id,
+                email: user.email, 
+                username: user.username 
+            };
 
-            if (match) {
-                // SUCCESS: Set the session data!
-                req.session.user = { 
-                    id: user._id,
-                    email: user.email, 
-                    username: user.username 
-                };
-
-                return res.status(200).json({ 
-                    message: 'Login successful!', 
-                    loggedIn: true,
-                    username: user.username,
-                    email: user.email
-                });
-            }
+            return res.status(200).json({ 
+                message: 'Login successful!', 
+                loggedIn: true,
+                username: user.username,
+                email: user.email
+            });
         }
         
         res.status(401).json({ message: 'Invalid email or password.' });
@@ -139,18 +255,52 @@ app.post('/api/login', async (req, res) => {
 
 // POST: Logout
 app.post('/api/logout', (req, res) => {
+    // FIXED: Use the session destroy callback to ensure the response is sent after destruction
     req.session.destroy(err => {
         if (err) {
             console.error('Logout error:', err);
             return res.status(500).json({ message: 'Could not log out.' });
         }
-        res.clearCookie('connect.sid'); 
+        
+        // FIXED: Clear the custom-named session cookie 'sessionId'
+        res.clearCookie(sessionConfig.name); 
         res.status(200).json({ message: 'Logged out successfully.' });
     });
 });
 
+// Global error handler
+app.use((err, req, res, next) => {
+    console.error('Error:', err.stack);
+    const statusCode = err.status || 500;
+    const message = isDevelopment ? err.message : 'Internal Server Error';
+    
+    res.status(statusCode).json({
+        error: {
+            message,
+            ...(isDevelopment && { stack: err.stack })
+        }
+    });
+});
+
+// Handle 404 errors
+app.use((req, res) => {
+    res.status(404).json({ error: { message: 'Resource not found' } });
+});
+
 // --- Server Startup ---
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+const server = app.listen(PORT, () => {
+    console.log(`Server is running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+});
+
+// Handle graceful shutdown
+process.on('SIGTERM', () => {
+    console.log('SIGTERM signal received. Closing HTTP server...');
+    server.close(() => {
+        console.log('HTTP server closed.');
+        mongoose.connection.close(false, () => {
+            console.log('MongoDB connection closed.');
+            process.exit(0);
+        });
+    });
 });

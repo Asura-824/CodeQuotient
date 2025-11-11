@@ -77,6 +77,24 @@
              background-color: #ff0066;
              cursor: pointer;
          }
+         /* 🚀 NEW CSS: Fixed message position at top right 🚀 */
+        #message-display {
+            position: fixed; 
+            top: 70px;
+            bottom: auto;    
+            right: 10px;     
+            width: 70%;
+            max-width: 350px; 
+            padding: 10px; 
+            margin: 0;
+            border-radius: 8px; 
+            font-weight: bold; 
+            text-align: center;
+            display: none; 
+            z-index: 1000;
+            border: 1px solid; 
+        }
+        /* ---------------------------------------------------- */
          @media (max-width:768px)
          {
              .container1{
@@ -148,21 +166,7 @@
                     </div>
                     </li>
                 </ul>
-                <div id="message-display" style="
-                    position: fixed; 
-                    top: 70px;
-                    bottom: auto;    /* 10px from the bottom */
-                    right: 10px;     /* 10px from the right */
-                    width: 70%;
-                    max-width: 350px; /* Adjusted max width for corner position */
-                    padding: 10px; 
-                    margin: 0;
-                    border-radius: 8px; /* Standard border radius */
-                    font-weight: bold; 
-                    text-align: center;
-                    display: none; 
-                    z-index: 1000;
-                    ">
+                <div id="message-display" style="display: none;">
                 </div>
             </div>
             </div>
@@ -170,7 +174,7 @@
 <div class="LOGIN">
     <div class="Login">
         <div class="container1">
-            <form method="post" id="loginForm">
+            <form id="loginForm">
                 <h2 style="color:rgb(0, 0, 0); text-align: center;">Welcomes to SHUBHAM'S CodeQuotient</h2>
                 <h4>Login to your account</h4>
                 <input type="email" name="email" placeholder="Enter your email id" id="emailInput" required>
@@ -216,6 +220,11 @@
             displayElement.style.color = '#856404'; 
             displayElement.style.borderColor = '#ffeeba';
         }
+        
+        // Hide the message after a delay (5 seconds)
+        setTimeout(() => {
+            displayElement.style.display = 'none';
+        }, 5000); 
     }
 
     // UPDATED FUNCTION: KEEPS THE LOGIN FORM VISIBLE
@@ -236,10 +245,9 @@
             loggedOutButtons.style.display = 'none';
             
             // CRITICAL CHANGE: DO NOT HIDE THE LOGIN CONTAINER
-            loginFormContainer.style.display = 'flex'; // Explicitly keep it visible (or remove this line) 
+            loginFormContainer.style.display = 'flex'; // Explicitly keep it visible 
             
             // You may want to disable the form inputs after login, or change the form message.
-            // Example:
             document.getElementById('loginForm').style.opacity = '0.5';
             document.getElementById('loginForm').style.pointerEvents = 'none';
 
@@ -259,6 +267,16 @@
 
     async function handleLogout() {
         try {
+            // Added check to ensure logout is only processed if user is logged in
+            const checkResponse = await fetch('/api/session');
+            const sessionData = await checkResponse.json();
+            
+            if (!sessionData.loggedIn) {
+                displayMessage('You are already logged out.', 'info');
+                updateHeaderDisplay(false);
+                return;
+            }
+            
             const response = await fetch('/api/logout', { method: 'POST' });
             if (response.ok) {
                 displayMessage('You have been successfully logged out.', 'success');
