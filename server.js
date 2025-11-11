@@ -131,11 +131,10 @@ if (!isDevelopment) {
 app.use(session(sessionConfig));
 
 // ----------------------------------------------------------------------
-// 💡 MODIFICATION START: Redirect root path to show index.html in URL
+// 💡 URL REDIRECT FOR INDEX.HTML
 // ----------------------------------------------------------------------
 
 // Redirect the root path to /index.html so the filename appears in the URL.
-// This route must be defined BEFORE the static file middleware.
 app.get('/', (req, res, next) => {
     // Only redirect if the path is exactly '/' and not an API endpoint
     if (req.originalUrl === '/' && !req.path.startsWith('/api')) {
@@ -145,10 +144,12 @@ app.get('/', (req, res, next) => {
 });
 
 // ----------------------------------------------------------------------
-// 💡 MODIFICATION END
+// --- Static File Serving with Security Headers ---
 // ----------------------------------------------------------------------
 
-// --- Static File Serving with Security Headers ---
+// Use path.resolve() instead of path.join(__dirname, '') for robustness in deployment environments
+const ROOT_PATH = path.resolve(__dirname);
+
 const staticOptions = {
     etag: true,
     lastModified: true,
@@ -170,12 +171,12 @@ const staticOptions = {
 };
 
 // Serve static files with security configurations
-app.use('/', express.static(path.join(__dirname, ''), staticOptions));
-app.use('/Projects', express.static(path.join(__dirname, 'Projects'), staticOptions));
-app.use('/Tutorials', express.static(path.join(__dirname, 'Tutorials'), staticOptions));
-app.use('/Datasets', express.static(path.join(__dirname, 'Datasets'), staticOptions));
-app.use('/Notes', express.static(path.join(__dirname, 'Notes'), staticOptions));
-app.use('/Images', express.static(path.join(__dirname, 'Images'), staticOptions));
+app.use('/', express.static(ROOT_PATH, staticOptions));
+app.use('/Projects', express.static(path.join(ROOT_PATH, 'Projects'), staticOptions));
+app.use('/Tutorials', express.static(path.join(ROOT_PATH, 'Tutorials'), staticOptions));
+app.use('/Datasets', express.static(path.join(ROOT_PATH, 'Datasets'), staticOptions));
+app.use('/Notes', express.static(path.join(ROOT_PATH, 'Notes'), staticOptions));
+app.use('/Images', express.static(path.join(ROOT_PATH, 'Images'), staticOptions));
 
 // ----------------------------------------------------------------------
 // --- API Routes ---
