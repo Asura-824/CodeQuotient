@@ -12,12 +12,20 @@ require('dotenv').config();
 
 // Environment configuration
 const isDevelopment = process.env.NODE_ENV !== 'production';
-// FIXED: Combined environment variables for allowed origins more robustly
-const allowedOrigins = [
-    ...(process.env.ALLOWED_ORIGINS || '').split(',').filter(Boolean),
-    process.env.CLIENT_ORIGIN
-].filter(Boolean);
 
+// 🌟 FIXED: Updated CORS Configuration Logic
+// 1. Combine origins from environment variables.
+const envOrigins = (process.env.ALLOWED_ORIGINS || '').split(',').filter(Boolean);
+if (process.env.CLIENT_ORIGIN) {
+    envOrigins.push(process.env.CLIENT_ORIGIN);
+}
+
+// 2. Add http://localhost:3000 for development environments to fix CORS error.
+if (isDevelopment && !envOrigins.includes('http://localhost:3000')) {
+    envOrigins.push('http://localhost:3000');
+}
+const allowedOrigins = envOrigins; 
+// ------------------------------------
 
 // Security configurations
 const rateLimitConfig = {
@@ -32,7 +40,6 @@ const app = express();
 app.set('trust proxy', 1);
 
 // --- MongoDB Connection ---
-// !! IMPORTANT: Ensure this MONGODB_URI is set as an Environment Variable on Vercel/Netlify !!
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://MyAppUser:Shubhamsk123@cluster0.p6girvj.mongodb.net/userDB?appName=Cluster0'; 
 
 mongoose.connect(MONGODB_URI)
@@ -85,12 +92,13 @@ app.use(cors({
         // Allow requests with no origin (like mobile apps or curl requests)
         if (!origin) return callback(null, true);
         
-        // FIXED: Use includes for better flexibility with multiple origins
-        if (allowedOrigins.includes(origin)) {
+        // Check if the requested origin is in the allowed list
+        if (allowedOrigins.includes(origin)) { 
             return callback(null, true);
         }
         
-        const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
+        // Fail if not allowed, with a descriptive message
+        const msg = `Error: The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
         return callback(new Error(msg), false);
     },
     credentials: true,
@@ -99,8 +107,6 @@ app.use(cors({
 }));
 
 // Enhanced Session Configuration
-const SESSION_SECRET = process.env.SESSION_SECRET || 'fallback-secret-local-only';
-
 const sessionConfig = {
     store: MongoStore.create({
         mongoUrl: MONGODB_URI,
@@ -108,10 +114,10 @@ const sessionConfig = {
         ttl: 24 * 60 * 60, // 24 hours
         autoRemove: 'native',
         crypto: {
-            secret: SESSION_SECRET
+            secret: process.env.SESSION_SECRET || 'fallback-secret-local-only'
         }
     }),
-    secret: SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || 'fallback-secret-local-only',
     name: 'sessionId', // Don't use default connect.sid
     resave: false,
     saveUninitialized: false,
@@ -130,17 +136,10 @@ if (!isDevelopment) {
 }
 app.use(session(sessionConfig));
 
-// ----------------------------------------------------------------------
-// 💡 MODIFICATION: Removed the app.get('/') redirect. Let static middleware handle it.
-// ----------------------------------------------------------------------
-
 // --- Static File Serving with Security Headers ---
 const staticOptions = {
     etag: true,
     lastModified: true,
-    // 💡 Added index: to explicitly tell express.static to serve index.html 
-    // when the base path (/) is requested.
-    index: ['index.html'], 
     setHeaders: (res, path) => {
         // Security headers
         res.set('X-Content-Type-Options', 'nosniff');
@@ -186,10 +185,9 @@ app.get('/api/session', (req, res) => {
 app.post('/api/signup', async (req, res) => {
     try {
         const { email, username, password } = req.body;
-        
-        // Basic input validation
+        // Added basic validation
         if (!email || !username || !password) {
-             return res.status(400).json({ message: 'All fields are required.' });
+            return res.status(400).json({ message: 'All fields are required.' });
         }
         
         const newUser = await User.create({ email, username, password });
@@ -211,12 +209,12 @@ app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
+        // Added basic validation
         if (!email || !password) {
              return res.status(400).json({ message: 'Email and password are required.' });
         }
         
-        // Added .select('+password') to retrieve the password hash
-        const user = await User.findOne({ email }).select('+password'); 
+        const user = await User.findOne({ email }).select('+password');
 
         if (user && await user.comparePassword(password)) {
             // SUCCESS: Set the session data!
@@ -244,15 +242,13 @@ app.post('/api/login', async (req, res) => {
 
 // POST: Logout
 app.post('/api/logout', (req, res) => {
-    // FIXED: Use the session destroy callback to ensure the response is sent after destruction
     req.session.destroy(err => {
         if (err) {
             console.error('Logout error:', err);
             return res.status(500).json({ message: 'Could not log out.' });
         }
-        
-        // FIXED: Clear the custom-named session cookie 'sessionId'
-        res.clearCookie(sessionConfig.name); 
+        // 🐞 FIXED: Clears the custom session cookie 'sessionId'
+        res.clearCookie('sessionId'); 
         res.status(200).json({ message: 'Logged out successfully.' });
     });
 });
@@ -271,14 +267,8 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Handle 404 errors (This is what you are seeing!)
+// Handle 404 errors
 app.use((req, res) => {
-    // 💡 Add an attempt to serve index.html if the URL is not found, 
-    // which can catch some client-side routing issues.
-    if (!req.path.startsWith('/api') && req.method === 'GET') {
-        return res.sendFile(path.join(__dirname, 'index.html'));
-    }
-    
     res.status(404).json({ error: { message: 'Resource not found' } });
 });
 

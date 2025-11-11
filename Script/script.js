@@ -10,16 +10,16 @@ function displayMessage(message, type) {
 
     displayElement.textContent = message;
     displayElement.style.display = 'block';
-    displayElement.style.border = '1px solid'; // Ensure border is applied
+    displayElement.style.border = '1px solid'; 
 
     if (type === 'success') {
         displayElement.style.backgroundColor = '#d4edda'; 
-        displayElement.style.color = '#155724';       
-        displayElement.style.borderColor = '#c3e6cb';   
+        displayElement.style.color = '#155724';        
+        displayElement.style.borderColor = '#c3e6cb';    
     } else if (type === 'error') {
         displayElement.style.backgroundColor = '#f8d7da'; 
-        displayElement.style.color = '#721c24';       
-        displayElement.style.borderColor = '#f5c6cb';   
+        displayElement.style.color = '#721c24';        
+        displayElement.style.borderColor = '#f5c6cb';    
     } else {
         // Default/Info
         displayElement.style.backgroundColor = '#fff3cd'; 
@@ -70,13 +70,30 @@ function updateHeaderDisplay(isLoggedIn, userData = {}) {
 }
 
 /**
- * Handles the AJAX call for logging out and updates the UI.
+ * Handles the logout request and UI update.
  */
 async function handleLogout() {
     try {
-        const response = await fetch('/api/logout', { method: 'POST' });
+        // 1. Check session status (Requires credentials: 'include')
+        const checkResponse = await fetch('/api/session', { credentials: 'include' });
+        const sessionData = await checkResponse.json();
+        
+        if (!sessionData.loggedIn) {
+            displayMessage('You are already logged out.', 'info');
+            updateHeaderDisplay(false);
+            return;
+        }
+
+        // 2. Perform the actual logout request
+        const response = await fetch('/api/logout', { 
+            method: 'POST',
+            // CRITICAL FIX: Ensure session cookie is sent to server for session.destroy()
+            credentials: 'include' 
+        });
+
         if (response.ok) {
             displayMessage('You have been successfully logged out.', 'success');
+            
             // Clear inputs if on the login page
             const emailInput = document.getElementById('emailInput');
             const passwordInput = document.getElementById('passwordInput');
@@ -94,15 +111,16 @@ async function handleLogout() {
 }
 
 // --- 2. TUTORIAL / PYODIDE LOGIC ---
+// NOTE: This section remains unchanged as it is not related to the auth/logout bug.
 
 // Assumes loadPyodide is defined globally by a separate script tag (in HTML head)
-const pyodideReadyPromise = loadPyodide(); 
+const pyodideReadyPromise = typeof loadPyodide === 'function' ? loadPyodide() : Promise.resolve(null); 
 
 async function runPython() {
     const codeEl = document.getElementById("code");
     const outputEl = document.getElementById("output");
 
-    if (!codeEl || !outputEl) return;
+    if (!codeEl || !outputEl || pyodideReadyPromise === null) return;
     
     const code = codeEl.value.trim();
     outputEl.innerHTML = "<em>⏳ Running...</em>";
@@ -226,9 +244,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- A. Initial Session Check ---
     async function checkSession() {
         try {
-            const response = await fetch('/api/session');
+            // FIX: Added credentials: 'include'
+            const response = await fetch('/api/session', { credentials: 'include' });
             const result = await response.json();
-            // result should contain { loggedIn: true/false, email: '...', username: '...' }
             updateHeaderDisplay(result.loggedIn, result);
         } catch (error) {
             console.error('Session check failed:', error);
@@ -239,6 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Attach listener for the logout button
     if (logoutButton) {
+        // Use the globally defined handleLogout
         logoutButton.addEventListener('click', handleLogout);
     }
     
@@ -248,7 +267,6 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault(); 
             
             const email = document.getElementById('emailInput').value;
-            // Assumes password input has name/id for accessing its value
             const password = loginForm.elements.password ? loginForm.elements.password.value : ''; 
             const loginButton = loginForm.querySelector('.button');
 
@@ -259,7 +277,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const response = await fetch('/api/login', { 
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
+                    body: JSON.stringify({ email, password }),
+                    // CRITICAL FIX: Ensure session cookie is received and stored by the browser
+                    credentials: 'include' 
                 });
                 
                 const result = await response.json();
