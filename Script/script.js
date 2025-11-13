@@ -402,3 +402,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// Simulated login status (replace with real logic)
+    const isLoggedIn = true; // Change to false to simulate logged-out state
+
+    // Show avatar only if logged in
+    if (isLoggedIn) {
+      document.getElementById('avatarContainer').style.display = 'block';
+      document.getElementById('display-user-email').textContent = 'Hello, SHUBHAM!';
+    }
+
+    function toggleUserInfo() {
+      const info = document.getElementById('userInfo');
+      info.style.display = info.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function logout() {
+      alert('Logging out...');
+      // Add logout logic here (e.g., clear session, redirect)
+      document.getElementById('avatarContainer').style.display = 'none';
+    }

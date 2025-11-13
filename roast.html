@@ -1,79 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="/assests/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="assests/style.css">
   <link rel="icon" style="border-radius:50%;" href="/Images/myimage.jpg" type="image/jpg">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js">
-  <title>Rock Paper Scissors | SHUBHAM’s CodeQuotient</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <title>Roast Generator | SHUBHAM’s CodeQuotient</title>
   <style>
-    .gamepage {
-      background-color: #f0f0f0;
-      padding: 50px 20px;
-      height: max-content;
-    }
-    .game-container {
-      max-width: 700px;
-      margin: auto;
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    }
-    .game-container h1, p {
+    .roast {
+      background: #F5F5F5;
+      color: #000000;
       text-align: center;
-      margin-bottom: 20px;
-      color: black;
+      height: 55vh;
+      margin: 80px auto;
+      font-family: 'Arial', sans-serif;
     }
-    .choices{
-        display: flex;
-        justify-content: center;
-        margin-bottom: 20px;
-    }
-    .choices button {
-      margin: 10px;
-      padding: 15px 25px;
-      font-size: 18px;
-      cursor: pointer;
+    select, button {
+      padding: 10px;
+      margin: 15px;
+      font-size: 1rem;
+      border-radius: 5px;
       border: none;
+    }
+    .roast select {
       width: 200px;
-      border-radius: 8px;
-      background-color: deeppink;
-      color: white;
-      transition: background 0.3s;
     }
-    .choices button:hover {
-      background-color: rgb(218, 4, 118);
+    .roast .container{
+      max-width: 600px;
+      margin: auto;
+      height: 400px;
+      padding: 120px 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     }
-    .result-text {
-      font-size: 24px;
-      margin: 20px 0;
-      font-weight: bold;
-      color: black;
-    }
-    .gif-display {
-      width: 300px;
-      margin: 20px auto;
-      display: none;
-    }
-    #play-again {
-      padding: 10px 20px;
-      font-size: 16px;
-      margin-top: 20px;
-      display: none;
-      background-color: #28a745;
-      color: white;
-      border: none;
-      border-radius: 6px;
+    button {
+      background-color: white;
+      color: #000000;
       cursor: pointer;
+      transition: background 0.3s ease;
     }
-    #play-again:hover {
-      background-color: #218838;
+
+    button:hover {
+      background-color: #ffe0e0;
+    }
+
+    #roastOutput {
+      margin-top: 30px;
+      font-size: 1.3rem;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
+
     <header class="header">
         <div class="container">
             <div class="header-top">
@@ -83,11 +63,11 @@
                 </div>
                 <nav>
                      <ul class="navlinks">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="features.html">Features</a></li>
-                        <li><a href="resume.html">Resume</a></li>
+                        <li><a href="/index.html">Home</a></li>
+                        <li><a href="/features.html">Features</a></li>
+                        <li><a href="/resume.html">Resume</a></li>
                         <li><a href="/Projects/projects.html">Projects</a></li>
-                        <li><a href="contactus.html">Contact</a></li>
+                        <li><a href="/contactus.html">Contact</a></li>
                     </ul>
                 </nav>
                 <div class="right-section">
@@ -126,18 +106,24 @@
             </div>
         </div>
     </header>
-<div class="gamepage">
-  <div class="game-container">
-    <h1>Let's Play Rock, Paper, Scissors!</h1>
-    <p>Welcome to the ultimate showdown of Rock, Paper, Scissors!</p>
-    <div class="choices">
-      <button onclick="play('rock')">Rock</button>
-      <button onclick="play('paper')">Paper</button>
-      <button onclick="play('scissor')">Scissor</button>
-    </div>
-    <div id="result" class="result-text"></div>
-    <img id="gif" class="gif-display" src="" alt="Result GIF">
-    <button id="play-again" onclick="resetGame()">Play Again</button>
+<div class="roast">
+  <div class="container">
+    <h1>Roast Generator by Role <i class="fas fa-users" aria-hidden="true"></i></h1>
+    <select id="roleSelect">
+      <option value="" disabled selected>Select a role</option> 
+      <option value="manager">Manager</option>
+      <option value="developer">Developer</option>
+      <option value="designer">Designer</option>
+      <option value="analyst">Analyst</option>
+      <option value="intern">Intern</option>
+      <option value="hr">HR</option>
+      <option value="tester">Tester</option>
+      <option value="ceo">CEO</option>
+      <option value="sales">Salesperson</option>
+      <option value="support">Support Agent</option>
+    </select>
+    <button id="roastBtn">Roast!</button>
+    <p id="roastOutput"></p>
   </div>
 </div>
 <footer id="contact">
@@ -154,41 +140,33 @@
             <p>Code is like poetry Some get it,some don't<br>Those who don't get it,are <b style="color: #f80404;"> confused.</b><br>Those who get it,are even <b style="color:#f80404;">more confused.</b></p>
             <p class="copyright">© 2025 SHUBHAM's CodeQuotient. All rights reserved.</p>
         </div>
-</footer>
+    </footer>
   <script>
-    function play(userChoice) {
-      const choices = ["rock", "paper", "scissor"];
-      const computerChoice = choices[Math.floor(Math.random() * choices.length)];
-      const resultDiv = document.getElementById("result");
-      const gif = document.getElementById("gif");
-      const playAgainBtn = document.getElementById("play-again");
+    let roastData = {};
 
-      let result = "";
+    // Load JSON file
+    fetch('roasts.json')
+      .then(response => response.json())
+      .then(data => {
+        roastData = data;
+      })
+      .catch(error => {
+        console.error("Failed to load roast data:", error);
+      });
 
-      if (userChoice === computerChoice) {
-        result = "TIE";
-      } else if (
-        (userChoice === "rock" && computerChoice === "scissor") ||
-        (userChoice === "paper" && computerChoice === "rock") ||
-        (userChoice === "scissor" && computerChoice === "paper")
-      ) {
-        result = "YOU WON";
-        gif.src = "winner.gif"; // Replace with your actual GIF path
-        gif.style.display = "block";
-      } else {
-        result = "YOU LOST";
-      }
+    // Roast on button click
+    document.getElementById("roastBtn").addEventListener("click", () => {
+    const role = document.getElementById("roleSelect").value;
 
-      resultDiv.textContent = `You chose ${userChoice}, computer chose ${computerChoice}. ${result}`;
-      playAgainBtn.style.display = "inline-block";
+    if (!role || !roastData[role]) {
+      document.getElementById("roastOutput").textContent = "Please select a role to roast.";
+      return;
     }
 
-    function resetGame() {
-      document.getElementById("result").textContent = "";
-      document.getElementById("gif").style.display = "none";
-      document.getElementById("gif").src = "";
-      document.getElementById("play-again").style.display = "none";
-    }
+    const roasts = roastData[role];
+    const roast = roasts[Math.floor(Math.random() * roasts.length)];
+    document.getElementById("roastOutput").textContent = roast;
+  });
   </script>
 </body>
 </html>

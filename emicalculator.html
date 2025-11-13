@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EMI Calculator | Shubham's CodeQuotient</title>
+  <link rel="icon" style="border-radius:50%;" href="/Images/myimage.jpg" type="image/jpg">
+  <link rel="stylesheet" href="/assests/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .emical {
+      background: #F5F5F5;
+      color: #000000;
+      text-align: center;
+      height: max-content;
+      margin: 70px auto;
+      font-family: 'Arial', sans-serif;
+    }
+    .emi{
+        background: #F5F5F5;
+        padding: 50px 20px;
+        color: black;
+        margin: auto;
+        border-radius: 20px;
+        width: 1500px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        height: max-content;
+    }
+    .emicontainer {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 40px 20px;
+      gap: 30px;
+    }
+
+    .emicontainer .container {
+      background:rgb(255, 245, 245);
+      border: 2px solid deeppink;
+      padding: 30px;
+      border-radius: 15px;
+      width: 100%;
+      max-width: 800px;
+      box-sizing: border-box;
+    }
+
+    h1, h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 90%;
+      padding: 12px;
+      margin: 10px auto;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: none;
+      display: block;
+    }
+
+    .emicontainer button {
+      padding: 12px;
+      width: 95%;
+      margin: 10px auto;
+      display: block;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: none;
+      background-color: white;
+      color: #000000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 1.1rem;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .chart-wrapper {
+      display: flex;
+      border: 2px solid deeppink;
+      border-radius: 15px;
+      color: black;
+      background-color: rgb(255, 245, 245) ;
+      flex-direction: column;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    canvas {
+      background: white;
+      border-radius: 15px;
+      width: 400px !important;
+      height: 400px !important;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 30px;
+      border-collapse: collapse;
+      color: rgb(0, 0, 0);
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      text-align: center;
+    }
+
+    th {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    tr:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    @media (max-width: 768px) {
+      input, button {
+        width: 100%;
+      }
+
+      canvas {
+        width: 100% !important;
+        height: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <img src="/Images/logo.png" alt="logo">
+                    SHUBHAM's CodeQuotient
+                </div>
+                <nav>
+                     <ul class="navlinks">
+                        <li><a href="/index.html">Home</a></li>
+                        <li><a href="/features.html">Features</a></li>
+                        <li><a href="/resume.html">Resume</a></li>
+                        <li><a href="/Projects/projects.html">Projects</a></li>
+                        <li><a href="/contactus.html">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="right-section">
+                    <input type="text" placeholder="Search..." class="search-bar">  
+                    
+                    <div class="logged-out-buttons" id="logged-out-buttons">
+                        <button class="header-button" onclick="location.href='/Login/login.html'">Login</button>
+                        <button class="header-button" onclick="location.href='/Signup/signup.html'">Signup</button>
+                    </div>
+
+                    <div class="user-info" id="user-info">
+                        <span class="user-name" id="display-user-email">Hello, User!</span>
+                        <button class="logout-button">Logout</button>
+                    </div>
+                </div>
+            </div>
+            <div class="header-bottom">
+               <ul class="secondary-nav">
+                <input type="text" placeholder="Search..." class="search-bar">
+                    <li class="dropdown">
+                    <a href="#tutorials">Tutorials <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <div class="dropdown-content">
+                            <a href="/Tutorials/Github/github.html">GitHub</a>
+                            <a href="/Tutorials/Python/python.html">Python</a>
+                            <a href="/Tutorials/SQL/sql.html">Sql</a>
+                            <a href="/Tutorials/Pandas/pandas.html">Pandas</a>
+                            <a href="/Tutorials/Numpy/numpy.html">NumPy</a>
+                            <a href="/Tutorials/Matplot/matplot.html">Matplot</a>
+                            <a href="/Tutorials/R Programming/R programming.html">R programming</a>
+                            <a href="/Tutorials/PostgreSQL/postgresql.html">Postgre Sql</a>
+                            <a href="/Tutorials/Excel/excel.html">Excel</a>
+                            <a href="/Tutorials/Power Bi/powerbi.html">Power Bi</a>
+                    </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+<section class="emical">
+<div  class="emi">
+    <h1><i class="fas fa-calculator" aria-hidden="true"></i> EMI Calculator</h1>
+  <div class="emicontainer">
+    <div class="container">
+        <h2><i class="fas fa-users" aria-hidden="true"></i> User Data</h2>
+      <input type="number" id="loanAmount" placeholder="Loan Amount (₹)" />
+      <input type="number" id="interestRate" placeholder="Annual Interest Rate (%)" />
+      <input type="number" id="loanTenure" placeholder="Loan Tenure (in months)" />
+      <button onclick="calculateEMI()">Calculate EMI</button>
+    </div>
+    <div class="chart-wrapper">
+        <div id="result">Your EMI breakdown will appear here.</div>
+        <canvas id="emiChart" width="400" height="400"></canvas>
+    </div>
+
+    <div class="container">
+      <h2><i class="fas fa-calendar" aria-hidden="true"></i> Amortization Schedule</h2>
+      <table id="scheduleTable">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>EMI (₹)</th>
+            <th>Interest (₹)</th>
+            <th>Principal (₹)</th>
+            <th>Balance (₹)</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</section>
+    <footer id="contact">
+        <div class="footercontainer">
+            <h3 class="langtitle">Connect with me for the better experience and the knowledge</h3>
+        </div>
+        <div class="social-links">
+                <a href="https://www.youtube.com/@LEARNWITHSKADAM_6457" style="--accent-color:red;" aria-label="Youtube"><img src="/Images/youtube.jpg" alt="Youtube" width="31px"></a>
+                <a href="https://github.com/Asura-824" style="--accent-color: rgb(52, 52, 52);" aria-label="Github"><img src="/Images/github.png" alt="Github" width="31px"></a>
+                <a href="https://www.linkedin.com/in/shubham-kadam-b8856031a?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BUAYDKko9S02GUSRNrD3vJg%3D%3D" style="--accent-color:rgb(25, 67, 233);" aria-label="Linkedin"><img src="/Images/linkedin.png" alt="Linkedin" width="35px"></a>
+        </div>
+        <div class="footerp">
+            <p style="font-size:bold;">Made with ❤️ by SHUBHAM</p>
+            <p>Code is like poetry Some get it,some don't<br>Those who don't get it,are <b style="color: #f80404;"> confused.</b><br>Those who get it,are even <b style="color:#f80404;">more confused.</b></p>
+            <p class="copyright">© 2025 SHUBHAM's CodeQuotient. All rights reserved.</p>
+        </div>
+    </footer>
+  <script>
+    let chart;
+
+    function calculateEMI() {
+      const P = parseFloat(document.getElementById("loanAmount").value);
+      const annualRate = parseFloat(document.getElementById("interestRate").value);
+      const N = parseInt(document.getElementById("loanTenure").value);
+
+      if (isNaN(P) || isNaN(annualRate) || isNaN(N) || P <= 0 || annualRate <= 0 || N <= 0) {
+        document.getElementById("result").textContent = "Please enter valid values.";
+        return;
+      }
+
+      const R = annualRate / 12 / 100;
+      const emi = (P * R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
+      const totalPayment = emi * N;
+      const totalInterest = totalPayment - P;
+
+      document.getElementById("result").innerHTML = `
+        <strong>Monthly EMI:</strong> ₹${emi.toFixed(2)}<br>
+        <strong>Total Payment:</strong> ₹${totalPayment.toFixed(2)}<br>
+        <strong>Total Interest:</strong> ₹${totalInterest.toFixed(2)}
+      `;
+
+      if (chart) chart.destroy();
+
+      const ctx = document.getElementById("emiChart").getContext("2d");
+      chart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: ['Principal', 'Interest'],
+          datasets: [{
+            data: [P, totalInterest],
+            backgroundColor: ['#36a2eb', '#ff6384']
+          }]
+        },
+        options: {
+          responsive: false,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            },
+            title: {
+              display: true,
+              text: 'EMI Payment Breakdown'
+            }
+          }
+        }
+      });
+
+      const tableBody = document.querySelector("#scheduleTable tbody");
+      tableBody.innerHTML = "";
+      let balance = P;
+
+      for (let i = 1; i <= N; i++) {
+        const interest = balance * R;
+        const principal = emi - interest;
+        balance -= principal;
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${i}</td>
+          <td>₹${emi.toFixed(2)}</td>
+          <td>₹${interest.toFixed(2)}</td>
+          <td>₹${principal.toFixed(2)}</td>
+          <td>₹${Math.max(balance, 0).toFixed(2)}</td>
+        `;
+        tableBody.appendChild(row);
+      }
+    }
+  </script>
+</body>
+</html>

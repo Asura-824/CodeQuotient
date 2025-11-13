@@ -844,22 +844,50 @@
             }
         }
         /*above image container styles*/
+@keyframes floatX {
+    0% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(10px);
+    }
+    50% {
+        transform: translateX(0);
+    }
+    75% {
+        transform: translateX(-10px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
 
         .language {
-            background-color: #F5F5F5; /* Use a darker background for cards */
+            background-color: #F5F5F5;  
             min-height: 350px;
             border-radius: 10px;
             overflow: hidden;
             display: flex;
             width: 350px;
-            border:2px solid #1b04e8;
+            border: 2px solid #1b04e8;
             flex-direction: column;
             box-shadow: var(--shadow);
-            transition: var(--transition);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: floatX 3s ease-in-out infinite;
+            transform-style: preserve-3d;
+            will-change: transform;
         }
+        .langcontr .language {
+            animation: floatX 3s ease-in-out infinite;
+        }    
         .langgrid .language{
             width: 380px;
         }
+        .langcontr .language:hover {
+            transform: scale(1.05) translateZ(20px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+
         .language:hover {
             border:3px solid #f06292;
             box-shadow: 0 8px 20px rgb(171, 7, 7); /* Stronger shadow on hover */
@@ -1066,9 +1094,17 @@
             gap: 10px;
         }
         .user-info {
-            display: none; 
-            align-items: center;
-            gap: 10px;
+            position: fixed;
+            top: 90px; /* appears below avatar-circle */
+            right: 20px;
+            width: 220px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            padding: 12px;
+            border-radius: 8px;
+            display: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            z-index: 99;
         }
         .user-avatar {
             width: 40px;
@@ -1122,7 +1158,14 @@
             cursor: pointer;
             margin-top: 1rem;
         }
-
+        .footerp{
+            text-align: center;
+            color: black;
+            gap: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+        }
               
         /* Responsive adjustments */
         @media (max-width: 768px) { 

@@ -3,7 +3,7 @@
 <head>
        <meta charset="UTF-8">
        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-       <title>Projects | SHUBHAM's CodeQuotient</title>
+       <title>Features | SHUBHAM's CodeQuotient</title>
        <link rel="stylesheet" href="/assests/style.css">
        <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
        <link rel="icon" style="border-radius:50%;" href="/Images/myimage.jpg" type="image/jpg">
@@ -27,12 +27,13 @@
             margin: 0 auto;
         }
         .features-grid {
-            padding: 40px 20px;
+            padding: 10px 20px;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
+            height: max-content;
             max-width: 1200px;
-            margin: auto;
+            margin: 40px auto;
         }
         .feature-card {
             background-color: white;
@@ -185,6 +186,19 @@
                 <a href="/rockpapsci.html" class="card-button">Play Now</a>
             </div>
 
+            <div class="feature-card">
+                <i class="fas fa-users" aria-hidden="true"></i>
+                <h2>Designation based Roaster</h2>
+                <p>Roast the person based on their designation. Don't take it personally! Designed for fun and entertainment.</p>
+                <a href="/roast.html" class="card-button">Try it Out</a>
+            </div>
+
+            <div class="feature-card">
+                <i class="fas fa-calculator" aria-hidden="true"></i>
+                <h2>EMI Calculator Machine</h2>
+                <p>Calculate your Equated Monthly Installments for loans with ease. Provide input and get the EMI instantly.</p>
+                <a href="/emicalculator.html" class="card-button">Calculate EMI</a>
+            </div>
         </section>
     </main>
     <footer id="contact">
@@ -196,9 +210,11 @@
                 <a href="https://github.com/Asura-824" style="--accent-color: rgb(52, 52, 52);" aria-label="Github"><img src="/Images/github.png" alt="Github" width="31px"></a>
                 <a href="https://www.linkedin.com/in/shubham-kadam-b8856031a?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BUAYDKko9S02GUSRNrD3vJg%3D%3D" style="--accent-color:rgb(25, 67, 233);" aria-label="Linkedin"><img src="/Images/linkedin.png" alt="Linkedin" width="35px"></a>
         </div>
-            <p style="font-size:bold;">Made with ❤️ by SHUBHAM</p><br>
-            <p>Code is like poetry Some get it,some don't<br>Those who don't get it,are <b style="color: #f80404;"> confused.</b><br>Those who get it,are even <b style="color:#f80404;">more confused.</b></p><br><br>
+        <div class="footerp">
+            <p style="font-size:bold;">Made with ❤️ by SHUBHAM</p>
+            <p>Code is like poetry Some get it,some don't<br>Those who don't get it,are <b style="color: #f80404;"> confused.</b><br>Those who get it,are even <b style="color:#f80404;">more confused.</b></p>
             <p class="copyright">© 2025 SHUBHAM's CodeQuotient. All rights reserved.</p>
+        </div>
     </footer>
     <script src="/script/script.js"></script>
 </body>
