@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/assests/style.css">
+    <!-- <link rel="stylesheet" href="/assests/style.css"> -->
 	<link rel="icon" style="border-radius:50%;" href="/Images/myimage.jpg" type="image/jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 	<title>Advanced Data Analysis & Forecast Tool</title>
@@ -25,6 +25,9 @@
             box-shadow: var(--shadow);
             border-bottom: 1px solid rgba(223, 223, 223, 0.986);
         }
+		.nav{
+			margin-left: 30px;
+		}
         .header-top1 .search-bar1 {
                 text-align: center;
                 width: 100px !important;
@@ -41,6 +44,14 @@
             margin: 0 auto;
             padding: 0;
             padding-right: 1rem;
+        }
+		 .footerp{
+            text-align: center;
+            color: black;
+            gap: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
         }
         .secondary-nav input{
             display:none;
@@ -83,11 +94,39 @@
             padding-bottom: 0; /* Space between top and bottom parts of header */
             gap:1rem /* Divider */
         }
-
+		.social-links {
+            display: flex;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+		.social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            margin: 0 0.5rem;
+            transition: var(--transition);
+        }
         .right-section1 {
             display: flex;
             align-items: center;
             gap: 0.8rem; /* Space between items in the right section */
+        }
+		.header-button {
+            border: 2px solid rgba(217, 215, 215, 0.947);
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            height: auto;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        .header-button:hover {
+            background-color: rgb(226, 224, 224);
         }
         
         .navlinks1 {
@@ -116,6 +155,7 @@
         .navlinks1 li:hover{
             background-color: #e4e4e4;
         }
+		
         
 		#chart { min-height: 400px; width: 100%; }
 		/* Override for chart canvas responsiveness */
@@ -146,6 +186,155 @@
 			max-height: 300px;
 			overflow-y: auto;
 		}
+		footer{
+            background-color:#F5F5F5;
+            padding: 1 0rem;
+            position: sticky;
+            width: 100%;
+            top: 0;
+            height: 350px;
+            color: #000000;
+            z-index: 20;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+		
+        /* Secondary Navigation */
+        .secondary-nav {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem; /* Space between secondary links */
+            margin-left: 1rem; /* Indent slightly from the left edge */
+        }
+        .secondary-nav li a {
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            display: flex;
+            color: #000000;
+            align-items: center;
+        }
+        .secondary-nav li a .dropdown-icon {
+            margin-left: 5px;
+            font-size: 0.7em; /* Smaller dropdown icon */
+            transform: translateY(2px);
+            transition: transform 0.3s ease;
+        }
+        .secondary-nav li.dropdown:hover .dropdown-icon {
+        transform: translateY(2px) rotate(180deg); /* Corrected selector and added 'deg' */
+        }
+		.dropdown-content {
+            display: none; /* Hidden by default */
+            position: absolute;
+            margin: auto;
+            background-color: rgb(255, 245, 245); 
+            box-shadow: var(--shadow);
+            border-radius: 6px;
+            padding: 1rem 0;
+            width: 500px;
+            transition: opacity 0.3s ease, visibility 0.3s ease; /* Fade in/out transition */
+        }
+       
+        .dropdown-content a {
+            padding: 10px 15px;
+            width: 140px;
+            height: 100px;
+            background-color: #F5F5F5 ;
+            border: 1px solid deeppink;
+            border-radius: 10px;
+            font-size: 0.9rem; /* Slightly smaller for dropdown items */
+            transition: background-color 0.3s ease, color 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            opacity: 1;
+            visibility: visible;
+        }
+@media (max-width: 768px) {
+  .header-top1 {
+	width: 100%;
+    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 0rem;
+    /* padding: 0.5rem; */
+  }
+
+  .nav {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .container {
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .navlinks1 {
+    flex-direction: row;
+    flex-basis: 100%;
+    width: 100%;
+  }
+
+  .navlinks1 li {
+    width: 100% !important;
+  }
+ .navlinks1 a{
+	width: 100%;
+ }
+  .navlinks1 li:hover {
+    background-color: rgb(218, 206, 206);
+  }
+
+  .logo1 {
+    flex-basis: 100%;
+    text-align: center;
+    align-items: center;
+    margin: 0 auto 1rem auto;
+    width: auto;
+  }
+
+  .right-section1,
+  .header-bottom1 {
+    display: none;
+  }
+  #chart {
+    min-height: 300px;
+    width: 100%;
+  }
+
+  #chart-container {
+    height: 300px;
+    padding: 0.5rem;
+    box-sizing: border-box;
+  }
+
+  .modal-content {
+    width: 90%;
+    max-width: none;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+  }
+
+  .group-result {
+    max-height: 200px;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .modal-overlay {
+    align-items: flex-start;
+    padding-top: 2rem;
+  }
+}
 	</style>
 
 	<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
@@ -161,11 +350,11 @@
                     <img src="/Images/logo.png" alt="logo">
                     SHUBHAM's CodeQuotient
                 </div>
-                <nav class="nav ml-12">
+                <nav class="nav">
                     <ul class="navlinks1">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="features.html">Features</a></li>
-                        <li><a href="resume.html">Resume</a></li>
+                        <li><a href="/index.html">Home</a></li>
+                        <li><a href="/features.html">Features</a></li>
+                        <li><a href="/resume.html">Resume</a></li>
                         <li><a href="/Projects/projects.html">Projects</a></li>
                         <li><a href="contactus.html">Contact</a></li>
                     </ul>
@@ -1167,15 +1356,37 @@ targetXInput.addEventListener('input', runForecast);
 filterInput.addEventListener('input', runForecast); // NEW listener for filter changes
 
 document.getElementById('exportBtn').addEventListener('click', () => {
-	if (parsedData.length === 0 || !chart) {
-		resultDiv.innerHTML = '<span class="text-red-500 font-bold">Error: Please load data and run an analysis/forecast before exporting the chart.</span>';
-		return;
-	}
-	
-	const link = document.createElement('a');
-	link.download = `forecast_chart_${Date.now()}.png`;
-	link.href = document.getElementById('chart').toDataURL('image/png', 1.0);
-	link.click();
+    if (parsedData.length === 0 || !chart) {
+        resultDiv.innerHTML = '<span class=\"text-red-500 font-bold\">Error: Please load data and run an analysis/forecast before exporting the chart.</span>';
+        return;
+    }
+    
+    const canvas = document.getElementById('chart');
+    const ctx = canvas.getContext('2d');
+    
+    // 1. Save the current canvas context state
+    ctx.save();
+    
+    // 2. Set the fill style to white
+    ctx.fillStyle = 'white';
+    
+    // 3. Set the global composite operation to 'destination-over' 
+    // This tells the canvas to draw the new shape *behind* the existing content (your chart)
+    ctx.globalCompositeOperation = 'destination-over';
+    
+    // 4. Draw a white rectangle that covers the entire canvas area
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // 5. Get the data URL. It now includes the white background.
+    const dataURL = canvas.toDataURL('image/png', 1.0);
+    
+    // 6. Restore the canvas state (removes the temporary white background from the chart display)
+    ctx.restore();
+    
+    const link = document.createElement('a');
+    link.download = `forecast_chart_${Date.now()}.png`;
+    link.href = dataURL;
+    link.click();
 });
 
 // Initial Setup

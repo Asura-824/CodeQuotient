@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/assests/style.css">
+  <link rel="icon" style="border-radius:50%;" href="/Images/myimage.jpg" type="image/jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+  <title>AI Chatbot | Shubham's CodeQuotient</title>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f0f0f0;
+      margin: 0;
+      background-color: rgb(255, 245, 245);
+      padding: 0;
+    }
+    #clear-chat {
+        background: #ff1493;
+        color: white;
+        border: none;
+        padding: 0.6rem 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        align-self: center;
+        margin-bottom: 1rem;
+        font-weight: bold;
+    }
+    .chat-container {
+      width: 90%;
+      max-width: 500px;
+      background: #fff;
+      height: 80vh;
+      margin: 2rem auto;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .chat-container header {
+      background: deeppink;
+      color: rgb(0, 0, 0);
+      padding: 1rem;
+      display: flex;
+      flex-direction: row;
+      gap: 12rem;
+      text-align: center;
+    }
+    .chat-box {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+    }
+
+    .message {
+      display: flex;
+      align-items: flex-start;
+      margin: 0.5rem 0;
+    }
+
+    .message .text {
+      padding: 0.6rem;
+      border-radius: 8px;
+      max-width: 80%;
+    }
+
+    .user .text {
+      background: #f10c6b;
+      margin-left: auto;
+    }
+
+    .bot .text {
+      background: #fc6171;
+      margin-right: auto;
+    }
+
+    form {
+      display: flex;
+      border-top: 1px solid #ccc;
+    }
+
+    input {
+      flex: 1;
+      padding: 0.8rem;
+      border: none;
+      outline: none;
+    }
+
+    .chat-container button {
+      padding: 0.8rem 1rem;
+      background: deeppink;
+      color: rgb(0, 0, 0);
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+        <header class="header">
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <img src="/Images/logo.png" alt="logo">
+                    SHUBHAM's CodeQuotient
+                </div>
+                <nav>
+                     <ul class="navlinks">
+                        <li><a href="/index.html">Home</a></li>
+                        <li><a href="/features.html">Features</a></li>
+                        <li><a href="/resume.html">Resume</a></li>
+                        <li><a href="/Projects/projects.html">Projects</a></li>
+                        <li><a href="/contactus.html">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="right-section">
+                    <input type="text" placeholder="Search..." class="search-bar">  
+                    
+                    <div class="logged-out-buttons" id="logged-out-buttons">
+                        <button class="header-button" onclick="location.href='/Login/login.html'">Login</button>
+                        <button class="header-button" onclick="location.href='/Signup/signup.html'">Signup</button>
+                    </div>
+
+                    <div class="user-info" id="user-info">
+                        <span class="user-name" id="display-user-email">Hello, User!</span>
+                        <button class="logout-button">Logout</button>
+                    </div>
+                </div>
+            </div>
+            <div class="header-bottom">
+               <ul class="secondary-nav">
+                <input type="text" placeholder="Search..." class="search-bar">
+                    <li class="dropdown">
+                    <a href="#tutorials">Tutorials <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <div class="dropdown-content">
+                            <a href="/Tutorials/Github/github.html">GitHub</a>
+                            <a href="/Tutorials/Python/python.html">Python</a>
+                            <a href="/Tutorials/SQL/sql.html">Sql</a>
+                            <a href="/Tutorials/Pandas/pandas.html">Pandas</a>
+                            <a href="/Tutorials/Numpy/numpy.html">NumPy</a>
+                            <a href="/Tutorials/Matplot/matplot.html">Matplot</a>
+                            <a href="/Tutorials/R Programming/R programming.html">R programming</a>
+                            <a href="/Tutorials/PostgreSQL/postgresql.html">Postgre Sql</a>
+                            <a href="/Tutorials/Excel/excel.html">Excel</a>
+                            <a href="/Tutorials/Power Bi/powerbi.html">Power Bi</a>
+                    </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+    <div class="chat-container">
+  <header>
+    <h1><i class="fas fa-robot"></i> Chat with AI</h1>
+    <button id="clear-chat" title="Clear Chat" style="background: none; border: none; cursor: pointer;">
+        <i class="fas fa-trash-alt" style="font-size: 1.5rem; margin: 1.5rem auto; color: rgb(0, 0, 0);"></i>
+    </button>
+  </header>
+  <div id="chat-box" class="chat-box"></div>
+  <form id="chat-form">
+    <input type="text" id="user-input" placeholder="Type your message here... " autocomplete="off" required />
+    <button type="submit">Send</button>
+  </form>
+</div>
+    <footer id="contact">
+        <div class="footercontainer">
+            <h3 class="langtitle">Connect with me for the better experience and the knowledge</h3>
+        </div>
+        <div class="social-links">
+                <a href="https://www.youtube.com/@LEARNWITHSKADAM_6457" style="--accent-color:red;" aria-label="Youtube"><img src="/Images/youtube.jpg" alt="Youtube" width="31px"></a>
+                <a href="https://github.com/Asura-824" style="--accent-color: rgb(52, 52, 52);" aria-label="Github"><img src="/Images/github.png" alt="Github" width="31px"></a>
+                <a href="https://www.linkedin.com/in/shubham-kadam-b8856031a?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BUAYDKko9S02GUSRNrD3vJg%3D%3D" style="--accent-color:rgb(25, 67, 233);" aria-label="Linkedin"><img src="/Images/linkedin.png" alt="Linkedin" width="35px"></a>
+        </div>
+        <div class="footerp">
+            <p style="font-size:bold;">Made with ❤️ by SHUBHAM</p>
+            <p>Code is like poetry Some get it,some don't<br>Those who don't get it,are <b style="color: #f80404;"> confused.</b><br>Those who get it,are even <b style="color:#f80404;">more confused.</b></p>
+            <p class="copyright">© 2025 SHUBHAM's CodeQuotient. All rights reserved.</p>
+        </div>
+    </footer>
+  <script>
+    const clearButton = document.getElementById('clear-chat');
+
+    clearButton.addEventListener('click', () => {
+    chatBox.innerHTML = '';
+    });
+  const chatForm = document.getElementById('chat-form');
+  const userInput = document.getElementById('user-input');
+  const chatBox = document.getElementById('chat-box');
+
+  let botData = {};
+
+  // Load chatbot.json
+  fetch('chatbot.json')
+    .then(res => res.json())
+    .then(data => botData = data)
+    .catch(err => {
+      console.error('Failed to load chatbot.json:', err);
+      botData = { default: "⚠️ Error loading chatbot data." };
+    });
+
+  // Handle form submission
+  chatForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const message = userInput.value.trim();
+    if (!message) return;
+
+    addMessage('user', message);
+    respondToUser(message.toLowerCase());
+    userInput.value = '';
+  });
+
+  // Add message to chat box
+  function addMessage(sender, text) {
+    const msg = document.createElement('div');
+    msg.classList.add('message', sender);
+
+    const bubble = document.createElement('div');
+    bubble.classList.add('text');
+    bubble.textContent = text;
+
+    msg.appendChild(bubble);
+    chatBox.appendChild(msg);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  // Fuzzy match user input to JSON keys
+  function respondToUser(input) {
+    let bestMatch = null;
+    let bestScore = 0;
+
+    for (const category in botData) {
+      if (category === "default") continue;
+
+      for (const key in botData[category]) {
+        const keyWords = key.toLowerCase().split(" ");
+        let score = 0;
+
+        keyWords.forEach(word => {
+          if (input.includes(word)) score++;
+        });
+
+        if (score > bestScore) {
+          bestScore = score;
+          bestMatch = botData[category][key];
+        }
+      }
+    }
+
+    const reply = bestMatch || botData["default"];
+    setTimeout(() => addMessage('bot', reply), 600);
+  }
+</script>
+</body>
+</html>

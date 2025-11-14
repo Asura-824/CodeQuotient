@@ -277,7 +277,8 @@
 			border-radius: 12px;
 			width: 90%;
 			max-width: 800px;
-			max-height: 90vh; 
+			max-height: 80vh; /* Set a max height relative to viewport */
+			overflow-y: auto;  /* Enable vertical scrolling */
 			box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
 		}
 		.modal-title {
@@ -514,7 +515,7 @@
 		<h3 class="modal-title">Python Code for Current Plot</h3>
 		<p class="modal-subtitle">This code uses **pandas** for data manipulation and **matplotlib/seaborn** for plotting, matching your selections.</p>
 		<pre id="codeDisplay"></pre>
-		<div class="modal-button-group">
+		<div class="modal-button-group" style="height: fit-content;">
 			<button id="copyCodeBtn" class="button-copy">
 				Copy Code
 			</button>

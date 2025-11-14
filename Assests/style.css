@@ -536,6 +536,12 @@
             .tutorials .container{
                 padding: 0 !important;
             }
+            .header-top .right-section{
+                display: none;
+            }
+            .header-bottom {
+                display: none;
+            }
             header, footer {
                 padding: 0rem !important;
             }
@@ -545,9 +551,6 @@
                 gap: 0rem !important;
                 width: 100% !important;
                 background-color: none;
-            }
-            .right-section{
-                display: none;
             }
             .logo {
                 font-size: 1rem !important;
@@ -574,7 +577,7 @@
                 width: 100% !important;
             }
             .navlinks li:hover{
-                background-color: black;
+                background-color: rgb(218, 206, 206);
             }
             .right-section {
                 flex-direction: row !important;
@@ -583,12 +586,12 @@
                 width: 100px !important;
                 margin: 0 !important;
             }
-            .header-bottom{
+            /* .header-bottom{
                 display: flex;
                 width: 100%;
                 justify-content: center;
                 align-items: center;
-            }
+            } */
             .header-bottom .dropdown{
                 display: flex;
                 flex-direction: column !important;
@@ -631,15 +634,15 @@
                 transition: background-color 0.3s ease, color 0.3s ease;
                 white-space: nowrap;
             }
-            .header-button, .button1, .button2, .navigation-buttons .button {
+            .header-button, .button2, .navigation-buttons .button {
                 font-size: 0.8rem !important;
                 padding: 0.4rem 0.8rem !important;
-                width: 100% !important;
+                width: 300px !important;
                 margin: 0.2rem 0 !important;
             }
-            .header-bottom input{
+            /* .header-bottom input{
                 display:flex;
-            }
+            } */
             .main {
                 flex-direction: column !important;
                 gap: 0.5rem !important;
@@ -653,7 +656,7 @@
                 top: 0 !important;
                 height: 100vh !important;
                 width: 80vw !important;
-                background: black;
+                background: rgb(255, 252, 252);
                 z-index: 99 !important;
                 transition: left 0.3s !important;
                 box-shadow: var(--shadow) !important;
@@ -830,7 +833,7 @@
                 height: 100vh !important;
                 width: 60vw !important;
                 top: 0px !important;
-                background: black !important;
+                background: rgb(255, 253, 253) !important;
                 transition: left 0.3s !important;
                 box-shadow: var(--shadow) !important;
                 border-right: none !important;
@@ -862,7 +865,7 @@
     }
 }
 
-        .language {
+         .language {
             background-color: #F5F5F5;  
             min-height: 350px;
             border-radius: 10px;
@@ -873,7 +876,6 @@
             flex-direction: column;
             box-shadow: var(--shadow);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            animation: floatX 3s ease-in-out infinite;
             transform-style: preserve-3d;
             will-change: transform;
         }
@@ -881,7 +883,7 @@
             animation: floatX 3s ease-in-out infinite;
         }    
         .langgrid .language{
-            width: 380px;
+            width: 350px;
         }
         .langcontr .language:hover {
             transform: scale(1.05) translateZ(20px);

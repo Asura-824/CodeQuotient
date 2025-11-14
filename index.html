@@ -85,17 +85,24 @@
       animation: fadeScaleIn 0.5s ease-out forwards;
     }
 
-    #typing-container {
-        font-size: 1.5em;
-        color: #000000;
-        white-space: nowrap;
-        overflow: hidden;
+    #typed-text-container {
+        width: 100%;
+        max-width: 90vw;
+        font-size: 4vw;
+        text-align: center;
+        line-height: 1.4;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        margin: 0 auto;
+        padding: 1rem;
+        box-sizing: border-box;
+        white-space: normal; /* Allows wrapping */
     }
 
     #cursor {
         display: inline-block;
-        animation: blink 0.7s steps(1) infinite;
-        transform: translateX(5px);
+        font-weight: bold;
+        color: black;
     }
 
     @keyframes blink {
@@ -261,52 +268,91 @@
     /* Mobile Responsive Styles */
     @media (max-width: 768px) {
         .hero {
-            background-color:#262424;
-            gap: 2rem;
+            height:auto;
         }
         .main1 {
             flex-direction: column;
             margin: auto;
+            display: flex;
+            flex-direction: column;
             justify-content: center;
             width: 100%;
-            height: 800px;
+            gap: 10px;
+            height: fit-content;
             transition: all 0.3s ease-in;
             transform: scale(1);
             animation: fadeScaleIn 0.5s ease-out forwards;
         }
-        .main1::before{
-            background-image: url("/Images/main1background.jpg");
-            background-size: stretch;
-            box-shadow: inset 0 0 300px rgb(255, 255, 255);
+        .main1 h1{
+            margin: auto;
+            font-size: 50px;
+            color: #000;
+            text-align: center;
+        }
+        .main1::before {
+            background-position: center top;
+            box-shadow: inset 0 0 150px rgba(224, 7, 101, 0.181);
+        }
+        .content{
+            margin: 100px auto;
+            width: 100%;
+            text-align: center;
+        }
+        .highlight{
+            color: #000;
+        }
+        #typed-text {
+            width: 100%;
+            max-width: 100vw;
+            font-size: 5vw;
+            text-align: center;
+            line-height: 1.4;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            margin: 0 auto;
+            padding: 1rem;
+            box-sizing: border-box;
+            display: inline-block; 
+        }
+        .main1btn{
+            display: flex;
+            margin: 50px 40px;
+            flex-direction: column;
+        }
+        #cursor{
+            display: none;
         }
         .myinfo {
-            max-width: 100%;
-            margin-top: 1rem;
+            max-width: 90%;
+            height: fit-content;
             background-color: rgb(255, 20, 147);
             border-radius: 20px;
             text-align: center;
-            padding: 1rem 0.5rem;
         }
         .myinfo p{
-            font-size: 15px;
+            font-size: 18px;
         }
         .myinfo img {
             width: 200px;
             height: 200px;
         }
-        .main2 {
-            background: none;
+        .main1btn{
+            display: flex;
             flex-direction: column;
-            width: 90vw;
+        }
+        .testimonial{
+            height: 900px;
+        }
+        .main2 {
+            background: #F5F5F5;
+            flex-direction: column;
+            width: 100%;
             height: fit-content;
             padding-top: 1%;
             gap: 2rem;
             align-items: center;
-            margin:auto;
-            animation: fadeScaleIn 0.5s ease-out forwards;
         }
         .main3 {
-            background: none;
             flex-direction: column;
             width: 90vw;
             height: auto;
@@ -345,7 +391,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: none;
+            background: rgb(255, 253, 253);
             gap: 1rem;
             animation: fadeScaleIn 0.5s ease-out forwards;
         }
@@ -680,7 +726,7 @@
                 </div>  
             </div>
         </div>
-        <div class="testimonial" style="background-color: #f3eeee; width: 100%; height: 820px; padding: 40px 20px; color: #000;">
+        <div class="testimonial" style="background-color: #f3eeee; width: 100%; height: auto; padding: 40px 20px; color: #000;">
             <h2 style="text-align: center; font-size: 2em; margin-bottom: 30px;">What Learners Say</h2>
             <div style="max-width: 1000px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
                 <!-- Testimonial Card 1 -->
@@ -750,20 +796,30 @@
     </footer>
     <script src="/script/script.js"></script>
     <script>
+       // JavaScript
         const text = "  with fun, visual, and hands-on coding and science!";
         const typedText = document.getElementById("typed-text");
         const cursor = document.getElementById("cursor");
-        const startindex=0;
-        let index = startindex;
+        let index = 0;
 
         function type() {
-            if (index < text.length) {
+        if (index < text.length) {
             typedText.textContent += text.charAt(index);
             index++;
-            setTimeout(type, 100); // adjust speed here
-            }
+            setTimeout(type, 100); // typing speed
         }
-        window.onload = type;
+        }
+
+        window.onload = () => {
+        type();
+        blinkCursor();
+        };
+
+        function blinkCursor() {
+        setInterval(() => {
+            cursor.style.visibility = cursor.style.visibility === "visible" ? "hidden" : "visible";
+        }, 500);
+        }
     </script>
 </body>
 </html>

@@ -3,75 +3,154 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="/assests/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="icon" style="border-radius:50%;" href="/Images/myimage.jpg" type="image/jpg">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js">
   <title>Rock Paper Scissors | SHUBHAM’s CodeQuotient</title>
   <style>
-    .gamepage {
-      background-color: #f0f0f0;
-      padding: 50px 20px;
-      height: max-content;
-    }
-    .game-container {
-      max-width: 700px;
-      margin: auto;
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    }
-    .game-container h1, p {
-      text-align: center;
-      margin-bottom: 20px;
-      color: black;
-    }
-    .choices{
-        display: flex;
-        justify-content: center;
-        margin-bottom: 20px;
-    }
-    .choices button {
-      margin: 10px;
-      padding: 15px 25px;
-      font-size: 18px;
-      cursor: pointer;
-      border: none;
-      width: 200px;
-      border-radius: 8px;
-      background-color: deeppink;
-      color: white;
-      transition: background 0.3s;
-    }
-    .choices button:hover {
-      background-color: rgb(218, 4, 118);
-    }
-    .result-text {
-      font-size: 24px;
-      margin: 20px 0;
-      font-weight: bold;
-      color: black;
-    }
-    .gif-display {
-      width: 300px;
-      margin: 20px auto;
-      display: none;
-    }
-    #play-again {
-      padding: 10px 20px;
-      font-size: 16px;
-      margin-top: 20px;
-      display: none;
-      background-color: #28a745;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    #play-again:hover {
-      background-color: #218838;
-    }
-  </style>
+  /* 🎮 Game Page Layout */
+.gamepage {
+  background-color: #f0f0f0;
+  padding: 50px 20px;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* 🧩 Game Container */
+.game-container {
+  max-width: 700px;
+  margin: auto;
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  box-sizing: border-box;
+}
+
+/* 📝 Headings and Paragraphs */
+.game-container h1,
+.game-container p {
+  text-align: center;
+  margin-bottom: 20px;
+  color: black;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* 🕹️ Choice Buttons */
+.choices {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.choices button {
+  padding: 15px 25px;
+  font-size: 18px;
+  cursor: pointer;
+  border: none;
+  width: 200px;
+  border-radius: 8px;
+  background-color: deeppink;
+  color: white;
+  transition: background 0.3s;
+}
+
+.choices button:hover {
+  background-color: rgb(218, 4, 118);
+}
+
+/* 🎯 Result Text */
+.result-text {
+  font-size: 24px;
+  margin: 20px 0;
+  font-weight: bold;
+  color: black;
+  text-align: center;
+}
+
+/* 🎞️ GIF Display */
+.gif-display {
+  width: 300px;
+  margin: 20px auto;
+  display: none;
+  border-radius: 8px;
+}
+
+/* 🔁 Play Again Button */
+#play-again {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin-top: 20px;
+  display: none;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#play-again:hover {
+  background-color: #218838;
+}
+
+@media (max-width: 768px) {
+  .gamepage {
+    /* Reduce padding on the overall game page */
+    padding: 30px 10px;
+  }
+
+  .game-container {
+    /* Use full width on mobile */
+    padding: 20px;
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.08);
+  }
+
+  .game-container h1,
+  .game-container p {
+    /* Slightly reduce font size for headings/paragraphs */
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+  }
+
+  .choices {
+    /* Stack buttons vertically instead of horizontally (flex-row) */
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .choices button {
+    /* Make buttons wider to fill the mobile screen */
+    width: 90%;
+    max-width: 250px;
+    font-size: 16px;
+    padding: 12px 20px;
+  }
+
+  .result-text {
+    /* Slightly smaller result text */
+    font-size: 20px;
+  }
+
+  .gif-display {
+    /* Make the GIF scale appropriately */
+    width: 90%;
+    max-width: 250px;
+  }
+
+  #play-again {
+    /* Make the play-again button wider */
+    width: 100%;
+    max-width: 200px;
+    font-size: 15px;
+    padding: 10px;
+  }
+}
+</style>
 </head>
 <body>
     <header class="header">
@@ -177,6 +256,9 @@
         gif.style.display = "block";
       } else {
         result = "YOU LOST";
+        // Optionally set a different GIF for losing, or clear the winner GIF if previously shown
+        gif.style.display = "none";
+        gif.src = "";
       }
 
       resultDiv.textContent = `You chose ${userChoice}, computer chose ${computerChoice}. ${result}`;
