@@ -111,7 +111,6 @@ async function handleLogout() {
 }
 
 // --- 2. TUTORIAL / PYODIDE LOGIC ---
-// NOTE: This section remains unchanged as it is not related to the auth/logout bug.
 
 // Assumes loadPyodide is defined globally by a separate script tag (in HTML head)
 const pyodideReadyPromise = typeof loadPyodide === 'function' ? loadPyodide() : Promise.resolve(null); 
@@ -344,16 +343,89 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- D. Navigation and Sidebar Logic ---
+    // --- D. Navigation and Sidebar Logic (FIXED) ---
 
     const navItems = document.querySelectorAll('.internal-nav-link');
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
 
+    // Sidebar element references
+    const sidebarToggleBtn = document.getElementById('sidebar-toggle');
+    const internalsidebar = document.getElementById('internalsidebar');
+    
+    let toggleSidebar, hideSidebar;
+
+    if (sidebarToggleBtn && internalsidebar) {
+        
+        // Define function to show the sidebar and HIDE the button
+        toggleSidebar = () => {
+            const isActive = internalsidebar.classList.toggle('active');
+            
+            // HIDE the toggle button when the sidebar is OPEN (active)
+            sidebarToggleBtn.style.setProperty('display', isActive ? 'none' : 'block', 'important');
+            
+            // Manage auxiliary classes and aria attribute
+            sidebarToggleBtn.classList.toggle('is-active', isActive);
+            sidebarToggleBtn.setAttribute('aria-expanded', isActive);
+        };
+
+        // Define function to hide the sidebar and SHOW the button
+        hideSidebar = () => {
+             if (internalsidebar.classList.contains('active')) {
+                internalsidebar.classList.remove('active');
+                
+                // SHOW the toggle button when the sidebar is CLOSED
+                sidebarToggleBtn.style.setProperty('display', 'block', 'important');
+
+                // Clean up auxiliary classes and aria attribute
+                sidebarToggleBtn.classList.remove('is-active');
+                sidebarToggleBtn.setAttribute('aria-expanded', false);
+             }
+        };
+
+        // Click listener for the toggle button
+        sidebarToggleBtn.onclick = toggleSidebar;
+
+        // Listener to hide sidebar when clicking outside
+        document.addEventListener('click', (e) => {
+            if (internalsidebar.classList.contains('active') && 
+                !internalsidebar.contains(e.target) && 
+                e.target !== sidebarToggleBtn && 
+                !e.target.closest('#sidebar-toggle')) {
+                hideSidebar();
+            }
+        });
+        
+        // Listener to hide sidebar on Escape key press
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                hideSidebar();
+            }
+        });
+    } else {
+        // Dummy function if elements don't exist
+        hideSidebar = () => {};
+    }
+
+    // Loop through navigation links (navItems)
     navItems.forEach(item => {
         const targetUrl = item.getAttribute('href') || item.getAttribute('data-target');
 
+        // Logic to set 'active' class on page load
         if (targetUrl && targetUrl.endsWith(currentPage)) {
             item.classList.add('active');
+        }
+        
+        // Add click listener to sidebar links to perform navigation and close the sidebar
+        if (targetUrl) {
+            item.addEventListener('click', (e) => {
+                e.preventDefault(); 
+                
+                // 1. Navigate to the target page
+                window.location.href = targetUrl;
+                
+                // 2. Close sidebar on mobile after clicking a link
+                hideSidebar(); 
+            });
         }
     });
 
@@ -371,36 +443,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     handleNavigationButton('.prev-topic-button');
     handleNavigationButton('.next-topic-button');
-
-    // Sidebar Toggle for Mobile
-    const sidebarToggleBtn = document.getElementById('sidebar-toggle');
-    const internalsidebar = document.getElementById('internalsidebar');
-
-    if (sidebarToggleBtn && internalsidebar) {
-        const showSidebar = () => {
-            internalsidebar.classList.add('active');
-            sidebarToggleBtn.style.setProperty('display', 'none', 'important');
-        };
-
-        const hideSidebar = () => {
-            internalsidebar.classList.remove('active');
-            sidebarToggleBtn.style.setProperty('display', 'block', 'important');
-        };
-
-        sidebarToggleBtn.onclick = showSidebar;
-
-        document.addEventListener('click', (e) => {
-            if (internalsidebar.classList.contains('active') && !internalsidebar.contains(e.target) && e.target !== sidebarToggleBtn) {
-                hideSidebar();
-            }
-        });
-        
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && internalsidebar.classList.contains('active')) {
-                hideSidebar();
-            }
-        });
-    }
 });
 
 // Simulated login status (replace with real logic)

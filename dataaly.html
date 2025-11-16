@@ -16,6 +16,13 @@
 			margin-left: auto;
 			margin-right: auto;
 			padding: 1.5rem; /* added for better spacing */
+			padding-bottom: 3rem; /* extra bottom spacing for footer */
+		}
+		/* Hint text for histogram (single-column) option */
+		.hist-hint {
+			font-size: 0.875rem; /* text-sm */
+			color: #6b7280; /* text-gray-500 */
+			margin-top: 0.5rem;
 		}
 		.main-title {
 			font-size: 2.25rem; /* text-4xl */
@@ -454,8 +461,8 @@
 				<select id="plotTypeSelect" class="control-select">
 					<option value="bar">Bar Plot</option>
 					<option value="line">Line Plot</option>
-					<option value="scatter" disabled>Scatter (No Aggregation)</option>
-					<option value="hist" disabled>Histogram (Single Column)</option>
+					<option value="scatter">Scatter (No Aggregation)</option>
+					<option value="hist">Histogram (Single Column)</option>
 				</select>
 				<p class="warning-text" id="typeWarning"></p>
 			</div>
@@ -486,6 +493,13 @@
 				</div>
 				<div>
 					<label class="block font-semibold text-sm mb-1" for="filterValueInput">Filter Value:</label>
+					<div style="margin-top:0.5rem; display:flex; align-items:center; gap:0.5rem;">
+						<input type="checkbox" id="showYValues" class="checkbox-input" />
+						<label for="showYValues" class="control-label" style="font-weight:600; font-size:0.875rem; margin:0;">
+							Show Y values on plot (data labels for points/bars)
+						</label>
+					</div>
+
 					<input type="text" id="filterValueInput" placeholder="Enter value (e.g., WA or 2015)" class="control-input">
 				</div>
 			</div>
@@ -539,6 +553,55 @@
             <p class="copyright">© 2025 SHUBHAM's CodeQuotient. All rights reserved.</p>
     </footer>
 <script>
+
+// Global toggle for showing Y-values on the chart
+window.SHOW_Y_VALUES = window.SHOW_Y_VALUES || false;
+// Register a Chart.js plugin to draw data labels when enabled
+if (typeof Chart !== 'undefined' && Chart && !Chart.__show_y_values_plugin_registered) {
+	Chart.register({
+		id: 'show_y_values_plugin',
+		afterDatasetsDraw: function(chart) {
+			if (!window.SHOW_Y_VALUES) return;
+			const ctx = chart.ctx;
+			chart.data.datasets.forEach((dataset, dsIndex) => {
+				const meta = chart.getDatasetMeta(dsIndex);
+				meta.data.forEach((element, idx) => {
+					// Try to resolve drawing coordinates
+					const x = (element.x !== undefined) ? element.x : (element.getCenterPoint ? element.getCenterPoint().x : null);
+					const y = (element.y !== undefined) ? element.y : (element.getCenterPoint ? element.getCenterPoint().y : null);
+					if (x === null || y === null) return;
+					let value = dataset.data[idx];
+					// If dataset value is an object (scatter points), try to extract y
+					if (value && typeof value === 'object') {
+						value = ('y' in value) ? value.y : (('x' in value) ? value.x : JSON.stringify(value));
+					}
+					ctx.save();
+					ctx.fillStyle = '#111827';
+					ctx.font = '12px sans-serif';
+					ctx.textAlign = 'center';
+					ctx.textBaseline = 'bottom';
+					ctx.fillText(String(value), x, y - 6);
+					ctx.restore();
+				});
+			});
+		}
+	});
+	Chart.__show_y_values_plugin_registered = true;
+}
+
+// Wire checkbox to global toggle and refresh chart when changed
+document.addEventListener('DOMContentLoaded', function() {
+	const cb = document.getElementById('showYValues');
+	if (!cb) return;
+	cb.checked = !!window.SHOW_Y_VALUES;
+	cb.addEventListener('change', function() {
+		window.SHOW_Y_VALUES = cb.checked;
+		// If a chart exists, update it to trigger plugin drawing
+		if (typeof chart !== 'undefined' && chart) {
+			try { chart.update(); } catch (e) { /* ignore */ }
+		}
+	});
+});
 // Global variables
 const dropzone = document.getElementById('dropzone');
 const fileInput = document.getElementById('fileInput');
@@ -697,12 +760,12 @@ function populateSelectors(fields) {
 }
 
 // --- Data Processing (Filtering and Grouping) ---
-function processDataForPlot(xCols, yCol, aggMethod, filterCol, filterOp, filterVal) {
+function processDataForPlot(xCols, yCol, aggMethod, plotType, filterCol, filterOp, filterVal) {
 	let data = parsedData;
-	let yLabel = aggMethod.charAt(0).toUpperCase() + aggMethod.slice(1) + (aggMethod === 'count' ? ' (Records)' : ` of ${yCol}`);
-
-	// 1. Filtering (applies to raw data)
+    let yLabel;
 	let filteredData = data;
+    
+	// 1. Filtering (applies to raw data)
 	if (filterCol && filterVal) {
 		let isNumericFilter = !isNaN(parseFloat(filterVal)) && isFinite(filterVal);
 		let compareVal = isNumericFilter ? parseFloat(filterVal) : filterVal.toLowerCase();
@@ -727,8 +790,75 @@ function processDataForPlot(xCols, yCol, aggMethod, filterCol, filterOp, filterV
 			}
 		});
 	}
+    
+    // --- SCATTER PLOT / NO AGGREGATION LOGIC ---
+    if (plotType === 'scatter') {
+        // Validation
+        if (xCols.length !== 1 || !isColumnNumeric(xCols[0])) {
+             throw new Error("Scatter plot requires one numeric column for X-Axis.");
+        }
+        if (!isColumnNumeric(yCol)) {
+            throw new Error(`Scatter plot requires numeric data for Y-Axis ('${yCol}').`);
+        }
+        
+        const numericXCol = xCols[0];
+        
+        const scatterData = filteredData.map(row => {
+            const x = parseFloat(row[numericXCol]);
+            const y = parseFloat(row[yCol]);
+            // Skip points with invalid numeric data
+            if (isNaN(x) || isNaN(y)) return null;
+            return { x, y };
+        }).filter(d => d !== null);
 
-	// 2. Grouping and Aggregation
+        if (scatterData.length === 0) {
+            throw new Error("Scatter plot found no valid numeric data points after filtering/parsing.");
+        }
+
+        yLabel = yCol;
+        const labels = scatterData.map(d => `(${d.x}, ${d.y})`); // Labels will be point coordinates
+        const values = scatterData; // Values are the {x, y} objects for Chart.js scatter
+        
+        return { labels, values, yLabel, filteredLength: filteredData.length, isScatter: true, isHist: false, xCol: numericXCol };
+    }
+    // --- END SCATTER PLOT LOGIC ---
+    
+    // --- HISTOGRAM LOGIC ---
+    if (plotType === 'hist') {
+        if (xCols.length !== 1) {
+            throw new Error("Histogram requires exactly one column to be selected on the X-Axis.");
+        }
+        const histCol = xCols[0];
+        if (!isColumnNumeric(histCol)) {
+            throw new Error(`The selected column ('${histCol}') is not numeric. Histogram requires a numeric column.`);
+        }
+
+        const uniqueValueCounts = {};
+        
+        filteredData.forEach(row => {
+            const val = row[histCol];
+            if (val !== null && val !== undefined && val !== '') {
+                const key = String(val); // Group by value
+                uniqueValueCounts[key] = (uniqueValueCounts[key] || 0) + 1;
+            }
+        });
+        
+        const labels = Object.keys(uniqueValueCounts).sort((a, b) => parseFloat(a) - parseFloat(b));
+        const values = labels.map(key => uniqueValueCounts[key]);
+        yLabel = 'Frequency / Count';
+
+        if (labels.length === 0) {
+            throw new Error("Filtering or column selection resulted in no valid data points for the histogram.");
+        }
+        
+        // Note: For Chart.js display, we treat this as an aggregated bar plot of unique values.
+        return { labels, values, yLabel, filteredLength: filteredData.length, isScatter: false, isHist: true, xCol: histCol };
+    }
+
+
+	// 2. Grouping and Aggregation (for bar/line plots)
+    yLabel = aggMethod.charAt(0).toUpperCase() + aggMethod.slice(1) + (aggMethod === 'count' ? ' (Records)' : ` of ${yCol}`);
+    
 	if (xCols.length === 0) {
 		throw new Error("Please select at least one column for X-Axis (Group By).");
 	}
@@ -799,7 +929,7 @@ function processDataForPlot(xCols, yCol, aggMethod, filterCol, filterOp, filterV
 		throw new Error("Grouping resulted in no valid data points. Check column types or filter.");
 	}
 
-	return { labels, values, yLabel, filteredLength: filteredData.length };
+	return { labels, values, yLabel, filteredLength: filteredData.length, isScatter: false, isHist: false, xCol: xCols.join(' - ') };
 }
 
 // --- Chart Generation ---
@@ -823,6 +953,23 @@ function generatePlot() {
 	const filterCol = filterColSelect.value;
 	const filterOp = filterOpSelect.value;
 	const filterValue = filterValueInput.value.trim();
+    
+    // --- Control State Management ---
+    const isScatter = plotType === 'scatter';
+    const isHistogram = plotType === 'hist';
+    
+    // Disable aggregation when scatter or hist is selected
+    aggMethodSelect.disabled = isScatter || isHistogram;
+    
+    // Update Plot Type Warning text for context
+    if (isScatter) {
+        typeWarning.textContent = "Scatter plot requires 1 numeric X-column (no aggregation).";
+    } else if (isHistogram) {
+        typeWarning.textContent = "Histogram requires 1 numeric X-column (no aggregation).";
+    } else {
+        typeWarning.textContent = "";
+    }
+
 
 	// Clear previous chart
 	if (chart) chart.destroy();
@@ -830,25 +977,30 @@ function generatePlot() {
 
 	try {
 		// 2. Process data
-		const { labels, values, yLabel, filteredLength } = processDataForPlot(
-			xCols, yCol, aggMethod, filterCol, filterOp, filterValue
+		const { labels, values, yLabel, filteredLength, isScatter: dataIsScatter, isHist: dataIsHist, xCol } = processDataForPlot(
+			xCols, yCol, aggMethod, plotType, filterCol, filterOp, filterValue
 		);
 
+		// Store configuration for Python code generation
 		chartConfig = { xCols, yCol, aggMethod, plotType, yLabel, filterCol, filterOp, filterValue };
 
 		// --- Chart.js Configuration ---
-		const dataset = {
-			label: yLabel,
-			data: values,
-			backgroundColor: 'rgba(59, 130, 246, 0.7)', // blue-500
-			borderColor: plotType === 'line' ? 'rgba(22, 101, 242, 1)' : 'rgba(59, 130, 246, 1)', // blue-700
-			borderWidth: 2,
-			barPercentage: 0.9,
-			categoryPercentage: 0.8,
-			pointRadius: plotType === 'line' ? 4 : 0,
-			tension: 0.4,
-			fill: false
-		};
+        const chartType = dataIsScatter ? 'scatter' : (dataIsHist ? 'bar' : plotType); 
+        const isAggregated = plotType === 'bar' || plotType === 'line';
+        
+        const dataset = {
+            label: dataIsScatter ? `${xCol} vs ${yCol}` : yLabel,
+            data: values,
+            backgroundColor: dataIsHist ? 'rgba(22, 163, 74, 0.7)' : 'rgba(59, 130, 246, 0.7)', // green for hist, blue otherwise
+            borderColor: dataIsHist ? 'rgba(22, 163, 74, 1)' : (dataIsScatter || plotType === 'line' ? 'rgba(22, 101, 242, 1)' : 'rgba(59, 130, 246, 1)'),
+            borderWidth: 2,
+            barPercentage: dataIsHist ? 1.0 : 0.9,
+            categoryPercentage: dataIsHist ? 1.0 : 0.8,
+            pointRadius: dataIsScatter || plotType === 'line' ? 4 : 0,
+            tension: plotType === 'line' ? 0.4 : 0,
+            fill: false,
+            showLine: plotType === 'line' // Only show line for line plots
+        };
 
 		const options = {
 			responsive: true,
@@ -856,7 +1008,11 @@ function generatePlot() {
 			plugins: {
 				title: {
 					display: true,
-					text: `${yLabel} of ${yCol} Grouped by ${xCols.join(' & ')} (Filtered N=${filteredLength}/${parsedData.length})`,
+					text: dataIsScatter 
+                        ? `${yCol} vs ${xCol} (N=${filteredLength}/${parsedData.length})` 
+                        : (dataIsHist
+                            ? `Distribution of ${xCol} (Filtered N=${filteredLength}/${parsedData.length})`
+                            : `${yLabel} of ${yCol} Grouped by ${xCols.join(' & ')} (Filtered N=${filteredLength}/${parsedData.length})`),
 					font: { size: 18, weight: 'bold' }
 				},
 				legend: { display: true }
@@ -865,18 +1021,18 @@ function generatePlot() {
 				x: {
 					title: {
 						display: true,
-						text: xCols.join(' - '),
+						text: xCol, // Use the single xCol label for scatter/hist or combined label
 						font: { weight: 'bold' }
 					},
-					type: 'category',
-					labels: labels,
+					type: dataIsScatter ? 'linear' : 'category', // Linear scale for scatter X-axis
+					labels: dataIsScatter ? undefined : labels, // Labels only for category axis
 					// Rotate labels for multi-column grouping
-					ticks: { maxRotation: 60, minRotation: 60 } 
+					ticks: { maxRotation: dataIsScatter ? 0 : 60, minRotation: dataIsScatter ? 0 : 60 } 
 				},
 				y: {
 					title: {
 						display: true,
-						text: yLabel,
+						text: dataIsScatter ? yCol : yLabel,
 						font: { weight: 'bold' }
 					},
 					beginAtZero: true
@@ -886,19 +1042,24 @@ function generatePlot() {
 
 		// Create the chart
 		chart = new Chart(ctx, {
-			type: plotType,
+			type: chartType,
 			data: {
-				labels: labels,
+				labels: dataIsScatter ? undefined : labels, // Pass labels only for category axes
 				datasets: [dataset]
 			},
 			options: options
 		});
 		
-		let statusMsg = `Aggregated plot generated successfully! Showing ${aggMethod.toUpperCase()} of ${yCol} grouped by ${xCols.join(' & ')}.`;
+		let statusMsg = dataIsScatter
+            ? `Scatter plot generated successfully! Showing relationship between ${xCol} and ${yCol}.`
+            : (dataIsHist
+                ? `Distribution plot generated successfully! Showing frequency of unique values for ${xCol}.`
+                : `Aggregated plot generated successfully! Showing ${aggMethod.toUpperCase()} of ${yCol} grouped by ${xCols.join(' & ')}.`);
+            
 		if (filterCol && filterValue) {
 			statusMsg += ` Filter applied: ${filterCol} ${filterOp} ${filterValue}.`;
 		}
-		statusMsg += `\nDisplaying ${labels.length} groups based on ${filteredLength}/${parsedData.length} records.`;
+		statusMsg += `\nDisplaying ${dataIsScatter ? values.length : labels.length} data points based on ${filteredLength}/${parsedData.length} records.`;
 		resultDiv.textContent = statusMsg;
 		codeBtn.disabled = false;
 
@@ -930,11 +1091,7 @@ import seaborn as sns # Used for better styling (optional)
 
 # --- Configuration ---
 FILE_NAME = '${filename}'
-X_COLS = [${xColList}] # Multiple columns for hierarchical grouping
 Y_COL = '${yCol}'
-AGG_METHOD = '${aggMethod}'
-Y_LABEL = '${yLabel}'
-Y_PLOT_COL = '${yColCode}'
 
 # NOTE: Assumes your data is saved as '${filename}' in the same directory.
 
@@ -946,8 +1103,9 @@ try:
 	# Ensure the Y column is numeric (coercing errors will turn non-numeric into NaN)
 	df[Y_COL] = pd.to_numeric(df[Y_COL], errors='coerce')
 	
-	# Drop rows where the critical X or Y columns are null
-	df.dropna(subset=[*X_COLS, Y_COL], inplace=True)
+    # Drop rows where the critical Y column is null (only critical for non-count/non-hist plots)
+    # We will refine NaN dropping later based on plot type, but starting with Y is safe.
+	# df.dropna(subset=[Y_COL], inplace=True) 
 except FileNotFoundError:
 	print(f"Error: File '{FILE_NAME}' not found.")
 	exit()
@@ -970,8 +1128,9 @@ filter_val = ${filterValCode}
 if filter_op in ['==', '!=']:
 	filtered_df = filtered_df[filtered_df[filter_col].astype(str).str.strip() ${pythonOp} str(filter_val).strip()]
 else:
-	# Use numeric comparison
-	filtered_df = filtered_df[filtered_df[filter_col] ${pythonOp} filter_val]
+    # Coerce to numeric for comparison
+    filtered_df['${filterCol}_numeric'] = pd.to_numeric(filtered_df[filter_col], errors='coerce')
+	filtered_df = filtered_df[filtered_df['${filterCol}_numeric'] ${pythonOp} filter_val].drop(columns=['${filterCol}_numeric'])
 
 print(f"Filtered Data Size: {len(filtered_df)}")
 if filtered_df.empty:
@@ -981,8 +1140,79 @@ if filtered_df.empty:
 `;
 	}
 
-	pythonCode += `
+    if (plotType === 'scatter') {
+        const numericXCol = xCols[0];
+        pythonCode += `
+# --- 3. Scatter Plotting (No Aggregation) ---
+X_COL = '${numericXCol}'
+# Ensure X and Y columns are numeric and drop rows with NaNs in either
+filtered_df[X_COL] = pd.to_numeric(filtered_df[X_COL], errors='coerce')
+plot_data = filtered_df.dropna(subset=[X_COL, Y_COL])
+
+print("Scatter Plot Data Size (valid points):", len(plot_data))
+
+# --- 4. Plotting using Matplotlib/Seaborn ---
+
+# Set a style for better visualization
+sns.set_theme(style="whitegrid")
+plt.figure(figsize=(12, 6))
+
+# Scatter Plot
+plt.scatter(plot_data[X_COL], plot_data[Y_COL], color='#3b82f6', alpha=0.7) # blue-500
+plt.title(f'Scatter Plot: {Y_COL} vs {X_COL}', fontsize=16, pad=15)
+plt.xlabel(X_COL, fontsize=12)
+plt.ylabel(Y_COL, fontsize=12)
+plt.grid(True, linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+`;
+    } else if (plotType === 'hist') {
+		const histCol = xCols[0];
+		
+		pythonCode += `
+# --- 3. Histogram Plotting using Matplotlib ---
+HIST_COL = '${histCol}' 
+
+# Ensure the column is numeric and drop NaNs for the plot
+filtered_df[HIST_COL] = pd.to_numeric(filtered_df[HIST_COL], errors='coerce')
+hist_data = filtered_df[HIST_COL].dropna()
+
+if hist_data.empty:
+    print(f"Error: The selected column ('{histCol}') has no valid numeric data after filtering.")
+    exit()
+
+# Set a style for better visualization
+sns.set_theme(style="whitegrid")
+plt.figure(figsize=(10, 6))
+
+# Matplotlib will automatically calculate bins
+# color='#16a34a' is the green color from the web app
+plt.hist(hist_data, bins='auto', color='#16a34a', edgecolor='black', alpha=0.8) 
+
+plt.title(f'Distribution (Histogram) of {HIST_COL}', fontsize=16, pad=15)
+plt.xlabel(HIST_COL, fontsize=12)
+plt.ylabel('Frequency / Count', fontsize=12)
+plt.grid(axis='y', alpha=0.5)
+plt.tight_layout()
+plt.show()
+`;
+	} else { // Aggregated Plots (Bar, Line)
+		
+		pythonCode += `
 # --- 3. Grouping and Aggregation ---
+X_COLS = [${xColList}] # Multiple columns for hierarchical grouping
+AGG_METHOD = '${aggMethod}'
+Y_LABEL = '${yLabel}'
+Y_PLOT_COL = '${yColCode}'
+
+# Drop rows where the critical X columns are null (Y column NaN check depends on agg method)
+if AGG_METHOD != 'count':
+    # For sum, mean, min, max, drop rows where X or Y are null
+	filtered_df.dropna(subset=[*X_COLS, Y_COL], inplace=True)
+else:
+    # For count, only drop rows where X is null
+	filtered_df.dropna(subset=X_COLS, inplace=True)
+
 
 if AGG_METHOD == 'count':
 	# For count, we group by X columns and get the size of each group
@@ -1018,8 +1248,8 @@ plt.figure(figsize=(12, 6))
 
 `;
 
-	if (plotType === 'bar') {
-		pythonCode += `
+		if (plotType === 'bar') {
+			pythonCode += `
 # Bar Plot
 # Use plt.bar for simple plots. Set color to match web app aesthetic.
 plt.bar(aggregated_df[X_PLOT_COL], aggregated_df[Y_PLOT_COL], color='#3b82f6') # blue-500
@@ -1030,8 +1260,8 @@ plt.xticks(rotation=60, ha='right') # Rotate for readability
 plt.tight_layout()
 plt.show()
 `;
-	} else if (plotType === 'line') {
-		pythonCode += `
+		} else if (plotType === 'line') {
+			pythonCode += `
 # Line Plot
 plt.plot(aggregated_df[X_PLOT_COL], aggregated_df[Y_PLOT_COL], 
          linestyle='-', marker='o', markersize=6, color='#3b82f6') # blue-500
@@ -1043,6 +1273,7 @@ plt.grid(True, linestyle='--', alpha=0.7)
 plt.tight_layout()
 plt.show()
 `;
+		}
 	}
 
 	return pythonCode;
@@ -1077,9 +1308,30 @@ fileInput.addEventListener('change', e => {
 });
 
 // Controls change events
-[ySelect, aggMethodSelect, plotTypeSelect, filterColSelect, filterOpSelect, filterValueInput].forEach(el =>
+// Only include elements that don't need special UI state logic on change
+[ySelect, aggMethodSelect, filterColSelect, filterOpSelect, filterValueInput].forEach(el =>
 	el.addEventListener('change', generatePlot)
 );
+
+// Dedicated listener for plotTypeSelect to manage aggregation controls and generate plot
+plotTypeSelect.addEventListener('change', () => {
+    const plotType = plotTypeSelect.value;
+    const isScatterOrHist = plotType === 'scatter' || plotType === 'hist';
+    
+    // Disable aggregation when scatter or hist is selected
+    aggMethodSelect.disabled = isScatterOrHist;
+    
+    // If switching TO a non-aggregated plot, clear warnings from other types.
+    if (isScatterOrHist) {
+        typeWarning.textContent = plotType === 'scatter' ? "Scatter plot requires 1 numeric X-column (no aggregation)." : "Histogram requires 1 numeric X-column (no aggregation).";
+    } else {
+        typeWarning.textContent = "";
+    }
+    
+    // Call generatePlot after updating controls
+    generatePlot();
+});
+
 
 // Plot button click explicitly calls generatePlot
 plotBtn.addEventListener('click', generatePlot);
