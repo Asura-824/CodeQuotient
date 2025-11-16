@@ -191,13 +191,6 @@
         height: 150px;
         text-align: center;
     }
-    .skillimg img{
-        width: 100px;
-        height: 100px;
-        background-size: cover;
-        border: 5px solid rgb(45, 41, 41);
-        border-radius: 100px;
-    }
     .data-analysis{
         padding: 2rem 1rem;
         width: 450px;
@@ -234,6 +227,25 @@
         gap: 3rem;
         width: max-content;
         font-size: 1rem;
+    }
+    .skillimg i {
+        font-size: 3.5rem; /* Adjust size as needed */
+        color: #333;        /* Optional: set icon color */
+        margin-right: 8px;  /* Optional: spacing between icon and label */
+    }
+    .skillimg i:hover {
+        color: #007acc; /* Change color on hover */
+        transform: scale(1.2); /* Slight zoom effect */
+        transition: transform 0.2s ease;
+    }
+    .skillimg {
+        display: flex;
+        align-items: center;     /* Vertical centering */
+        justify-content: center; /* Horizontal centering */
+        gap: 10px;               /* Space between icon and text */
+        font-size: 2rem;         /* Increase icon size */
+        color: #333;             /* Optional: icon/text color */
+        margin: 10px 0;          /* Optional: spacing between items */
     }
     .myprojects li {
         background:   rgb(255, 245, 245);
@@ -663,71 +675,106 @@
                     <ul>
                         <li>
                             <div class="skillimg">
-                                <img src="/Images/Github1.png" alt="Github">
+                                <i class="fab fa-github" aria-hidden="true"></i>
                             </div>GitHub
                         </li>
                         <li>
                             <div class="skillimg">
-                                <img src="/Images/pyimg.png" alt="PYTHON">
-                            </div>PYTHON
+                                <i class="fab fa-python" aria-hidden="true"></i>
+                            </div>Python
+                        </li>
+                        <li>    
+                            <div class="skillimg">
+                                <i class="fas fa-fire" aria-hidden="true"></i>
+                            </div>PySpark
                         </li>
                         <li>
                             <div class="skillimg">
-                                <img src="/Images/sqlimg.png" alt="SQL">
+                                <i class="fas fa-table" aria-hidden="true"></i>
+                            </div>Pandas
+                        </li>
+                        <li>
+                            <div class="skillimg">
+                                <i class="fas fa-square-root-alt" aria-hidden="true"></i>
+                            </div>NumPy
+                        </li>
+                        <li>
+                            <div class="skillimg">
+                                <i class="fas fa-chart-line" aria-hidden="true"></i>
+                            </div>Matplotlib
+                        </li>
+                        <li>
+                            <div class="skillimg">
+                                <i class="fas fa-chart-bar" aria-hidden="true"></i>
+                            </div>Seaborn
+                        </li>
+                        <li>
+                            <div class="skillimg">
+                                <i class="fas fa-brain" aria-hidden="true"></i>
+                            </div>Machine Learning
+                        </li>
+                        <li>
+                            <div class="skillimg">
+                                <i class="fas fa-database" aria-hidden="true"></i>
                             </div>SQL
+
                         </li>
                         <li>
                             <div class="skillimg">
-                                <img src="/Images/rprimg.jpg" alt="R PROGRAMMING">
+                                <i class="fas fa-code" aria-hidden="true"></i>
                             </div>R
                         </li>
                         <li>
-                        <div class="skillimg">
-                            <img src="/Images/pdimg.png" alt="PANDAS">
-                        </div>PANDAS
+                            <div class="skillimg">
+                                <i class="fab fa-html5" aria-hidden="true"></i>
+                            </div>HTML
                         </li>
                         <li>
                             <div class="skillimg">
-                                <img src="/Images/npimg.png" alt="NUMPY">
-                            </div>NUMPY
+                                <i class="fab fa-css3-alt" aria-hidden="true"></i>
+                            </div>CSS
                         </li>
                         <li>
                             <div class="skillimg">
-                                <img src="/Images/mtplotimg.png" alt="MATPLOTLIB">
-                            </div>MATPLOTLIB
+                                <i class="fab fa-js-square" aria-hidden="true"></i>
+                            </div>JavaScript
                         </li>
                         <li>
                             <div class="skillimg">
-                                <img src="/Images/seabimg.png" alt="SEABORN">
-                            </div>SEABORN
+                                <i class="fas fa-file-excel" aria-hidden="true"></i>
+                            </div>Excel
                         </li>
                         <li>
                             <div class="skillimg">
-                                <img src="/Images/excelimg.jpg" alt="EXCEL">
-                            </div>EXCEL
+                                <i class="fas fa-server" aria-hidden="true"></i>
+                            </div>PostgreSQL
+                        </li>
+                        <li>    
+                            <div class="skillimg">
+                                <i class="fas fa-chart-area" aria-hidden="true"></i>
+                            </div>Power BI
                         </li>
                         <li>
                             <div class="skillimg">
-                                <img src="/Images/pstgsqlimg.png" alt="POSTGRESQL">
-                            </div>POSTGRESQL
-                        </li>
-                        <li>
-                            <div class="skillimg">
-                                <img src="/Images/pbiimg.png" alt="POWER BI">
-                            </div>POWER BI
+                                <i class="fas fa-chart-pie" aria-hidden="true"></i>
+                            </div>Tableau
                         </li>
                     </ul>
                 </div>
                 <div class="myprojects">
                     <h1>My Projects</h1>
                     <ul>
-                        <li>QR Generator</li>
-                        <li>Phone Data Masking</li>
                         <li>EV Population analysis</li>
                         <li>India census analysis</li>
                         <li>Netflix user analysis</li>
                         <li>Covid-19 analysis</li>
                         <li>Spotify user analysis</li>
+                        <li>QR Generator</li>
+                        <li>Phone Data Masking</li>
+                        <li>Stop timer and Count down</li>
+                        <li>Face detection</li>
+                        <li>Rock paper scissor</li>
+                        <li>Number gusseing</li>
                     </ul>
                 </div>  
             </div>
