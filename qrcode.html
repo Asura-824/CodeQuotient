@@ -192,7 +192,7 @@
                 <i class="fas fa-qrcode primary mr-2"></i> Instant QR Code Generator
             </h1>
             <p class="description">
-                Paste any URL or text below and click 'Generate' to create your custom QR code with the **Orange background** theme.
+                Paste any URL or text below and click 'Generate' to create your custom QR code with the **White background** theme.
             </p>
 
             <!-- Input Field -->
@@ -270,13 +270,13 @@
             qrcodeDiv.innerHTML = '';
 
             // Initialize or update the QR code instance
-            // Configuration mimics your Python script: fill_color="black", back_color="orange"
+            // Configuration mimics your Python script: fill_color="black", back_color="white"
             qrCodeInstance = new QRCode(qrcodeDiv, {
                 text: data,
                 width: 256,
                 height: 256,
                 colorDark: "#000000",      // Black fill color
-                colorLight: "#FFA500",     // Orange background color (using hex for orange)
+                colorLight: "white",     // White background color
                 correctLevel: QRCode.CorrectLevel.L // Error correction level L
             });
 
@@ -303,7 +303,7 @@
                 // Create a temporary link element to trigger the download
                 const link = document.createElement('a');
                 link.href = imageURL;
-                link.download = 'qrcode_shubham.png';
+                link.download = 'qrcode.png';
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
