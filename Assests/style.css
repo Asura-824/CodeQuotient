@@ -519,6 +519,59 @@
         .header-bottom input{
             display: none;
         }
+        /* Social links in footer */
+        .social-links {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        /* Individual link appearance */
+        .social-links a {
+            width: 48px;
+            height: 48px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #ffffff;
+            color: #222222;
+            text-decoration: none;
+            box-shadow:0 8px 20px rgba(0, 0, 0, 0.15)   ;
+            transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Icon sizing */
+        .social-links a i {
+            font-size: 1.25rem;
+            line-height: 1;
+            pointer-events: none; /* ensure the anchor handles clicks/focus */
+        }
+
+
+        /* Slightly smaller on narrow screens */
+        @media (max-width: 480px) {
+            .social-links a {
+                width: 40px;
+                height: 40px;
+            }
+            .social-links a i {
+                font-size: 1rem;
+            }
+        }
+
+        /* Respect users who prefer reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .social-links a,
+            .social-links a:hover,
+            .social-links a:focus {
+                transition: none;
+                transform: none;
+            }
+        }
         @media (max-width: 768px) {
             .main, .projects, .tutorials, .internal-content-display, .internalsidebar {
                 padding: 0.5rem !important;
@@ -735,22 +788,20 @@
                 max-width: 100vw !important;
                 border-radius: 8px !important;
             }
-            .social-links {
-                flex-direction: row !important;
-                gap: 0.2rem !important;
-                margin: 0.5rem 0 !important;
+            /* smaller icons on narrow screens */
+            @media (max-width: 480px) {
+                .social-links i {
+                    width: 34px;
+                    height: 34px;
+                    font-size: 1rem;
+                }
             }
-            .social-links a {
-                width: 35px !important;
-                height: 35px !important;
-                border-radius: 50%;
             }
             .datainfo{
                 width: 300px;
                 margin: auto;
                 animation: fadeScaleIn 0.5s ease-out forwards;  
             }
-        }
 @keyframes fadeScaleIn {
   0% {
     opacity: 0;
