@@ -68,7 +68,7 @@
             position: sticky;
             width: 100%;
             top: 0;
-            height: 350px;
+            height: 400px;
             color: #000000;
             z-index: 20;
             box-shadow: var(--shadow);
@@ -566,7 +566,6 @@
         /* Respect users who prefer reduced motion */
         @media (prefers-reduced-motion: reduce) {
             .social-links a,
-            .social-links a:hover,
             .social-links a:focus {
                 transition: none;
                 transform: none;
@@ -598,7 +597,7 @@
             header, footer {
                 padding: 0rem !important;
             }
-            .header,.footer{
+            .header, #contact{
                 flex-direction: column !important;
                 align-items: center !important;
                 gap: 0rem !important;
@@ -790,9 +789,9 @@
             }
             /* smaller icons on narrow screens */
             @media (max-width: 480px) {
-                .social-links i {
-                    width: 34px;
-                    height: 34px;
+                .social-links a {
+                    width: 40px;
+                    height: 40px;
                     font-size: 1rem;
                 }
             }
@@ -1260,5 +1259,10 @@
                 gap: 0.5rem;
                 text-align: center;
                 width: 100%;
+            }
+            .social-links a i {
+                font-size: 1.50rem;
+                line-height: 1;
+                pointer-events: none; /* ensure the anchor handles clicks/focus */
             }
         } 

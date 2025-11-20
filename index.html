@@ -196,7 +196,9 @@
         width: 450px;
         height: 300px; 
         max-height: 400px;
-        border: 2px solid rgb(0, 0, 0); 
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        border-top: 10px solid deeppink;
+        /* border: 2px solid rgb(0, 0, 0);  */
         border-radius: 50px;
     }
     .myprojects , .myskills {
@@ -280,7 +282,7 @@
     /* Mobile Responsive Styles */
     @media (max-width: 768px) {
         .hero {
-            height:auto;
+            height:max-content;
         }
         .main1 {
             flex-direction: column;
