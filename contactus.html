@@ -23,20 +23,8 @@
         border-radius: 20px;
         width: 400px;
         height: 400px;
-        border: 2px solid rgb(242, 233, 238);
+        box-shadow: 2px 0 5px rgba(0,0,0,0.5);
     }
-   /* #popup {
-      display: none;
-      position: fixed;
-      top: 20%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #4CAF50;
-      color: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    } */
 
     form{
         padding: 55px 60px;
@@ -66,13 +54,15 @@
         flex-direction: column;
         height: max-content;
         color: black;
+        background-color:rgb(255, 245, 245);
         border-radius: 20px;
         padding: 15px 10px;
-        border: 1px solid deeppink;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.5);
     }
     @media (max-width:768px){
         .contactus{
             display: flex;
+            gap: 3rem;
             flex-direction: column;
             width: 100%
         }
@@ -81,6 +71,12 @@
         }
         .contact{
             width: 100%;
+        }
+        .contactinfo img{
+            width: 50%;
+            border: none;
+            box-shadow:2px 0 5px rgba(78, 69, 69, 0.945) ;
+            height: 50%;
         }
     }
   </style>
@@ -143,12 +139,12 @@
 </div>
 <section class="contactus">
     <div class="contactinfo">
-        <h1>Contact Us</h1>
+        <h1>Contact Me</h1>
         <p>
-            We're building something meaningful and we'd love your help! Whether you're a developer, designer, writer, or enthusiast, your contributions can make a real impact. Explore our GitHub repository, suggest improvements, fix bugs, or add new features. Every idea counts, and every pull request helps us grow.
+            I'm building something meaningful, and I'd love your help! Whether you're a developer, designer, writer, or enthusiast, your contributions can make a real impact. Explore my GitHub repositories, suggest improvements, fix bugs, or add new features. Every idea counts, and every pull request helps this project grow.
         </p>
         <p>
-            Join our community, collaborate, and help shape the future of this project. Let's build something awesome together!
+            Join the community, collaborate, and help shape the future of this project. Let's build something awesome together!
         </p>
         <p><strong>Email:</strong> shubham85kadam@gmail.com</p>
         <img src="myimage.jpg" alt="myimage">
